@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.PartSectionDao">
+
+    <select id="queryPart" parameterType="int" resultType="partSectionModel">
+       
+       select part_id as partId,part_id_name as partIdName,part_name as partName 
+       from t_part_section where t_part_section.section_id = #{sectionId}
+    </select>
+
+</mapper>

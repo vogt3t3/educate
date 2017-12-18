@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.CourseModelDao">
+    <!-- 实体类中的和数据库中的数据不一致 -->
+    <resultMap type="com.education.model.CourseModel" id="likeCourseMap">
+        <result property="courseId" column="course_id" />
+        <result property="courseName" column="course_name" />
+        <result property="courseScore" column="course_score" />
+        <result property="courseEdition" column="course_edition" />
+        <result property="courseClass" column="course_class" />
+        <result property="teacherRealName" column="teacher_realname" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="onlineTestScorce" column="course_online_test_scorce" />
+        <result property="finalTestScorce" column="course_final_test_scorce" />
+        <result property="onlineScorce" column="course_online_scorce" />
+        <result property="coursePlan" column="course_plan" />
+        <result property="createDate" column="course_create_date" />
+        <result property="modifyDate" column="course_modify_date" />
+        <result property="courseDelete" column="course_delete" />
+        <result property="majorId" column="major_id" />
+        <result property="majorName" column="major_name" />
+    </resultMap>
+
+    <!-- 查询全部 -->
+    <select id="selectCourseById" resultMap="likeCourseMap">
+          select c.course_id,c.course_name,c.major_id,m.major_name,c.teacher_id,t.teacher_realname,
+          c.course_score,c.course_edition,c.course_class,c.course_online_test_scorce,
+          c.course_final_test_scorce,c.course_online_scorce,c.course_plan,c.course_create_date,
+          c.course_modify_date,c.course_delete from t_course c,t_teacher t,t_major m 
+        <where>
+            <if test="true">
+                and  c.course_delete=1 and 
+                t.teacher_id=c.teacher_id and 
+                m.major_id=c.major_id
+            </if>
+            <if test="courseId!=null" >
+                and c.course_id = #{courseId}
+            </if>
+            <if test="courseName!=null and courseName!=''">
+                and c.course_name like concat('%',#{courseName},'%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 修改 -->
+    <update id="updateCourseById" parameterType="CourseInform">
+    update t_course c,t_teacher t,t_major m set
+
+        c.course_name = #{courseName},
+        c.major_id = #{majorId},
+        m.major_name = #{majorName},
+        c.teacher_id = #{teacherId},
+        t.teacher_realname = #{teacherRealName},
+        c.course_score = #{courseScore},
+        c.course_edition = #{courseEdition},
+        c.course_class = #{courseClass},
+        c.course_online_test_scorce = #{onlineTestScorce},
+        c.course_final_test_scorce = #{finalTestScorce},
+        c.course_online_scorce = #{onlineScorce},
+        c.course_plan = #{coursePlan},
+        c.course_modify_person = '赵睿慷',
+        c.course_modify_date = Now()
+
+    where course_id = #{courseId} ;
+    </update>
+    
+    <select id="selectMajorById" resultMap="likeCourseMap" parameterType="int">
+    select major_id,major_name from t_course where major_id = #{majorId};
+    </select>
+    
+    <select id="selectTeacherById" resultMap="likeCourseMap" parameterType="int">
+    select teacher_realname,teacher_id from t_teacher where teacher_id = #{teacherId};
+    </select>
+
+    <!-- 增加 -->
+    <insert id="addCourse" parameterType="CourseModel">
+    insert into t_course (course_name,course_score,course_edition,course_class,teacher_id,
+        course_online_test_scorce,course_final_test_scorce,course_online_scorce,course_plan,
+        course_create_date,course_delete)
+    values 
+        (#{courseName},#{courseScore},#{courseEdition},#{courseClass},#{teacherId},
+        #{onlineTestScorce},#{finalTestScorce},#{onlineScorce},#{coursePlan},
+        Now(),1);
+    </insert>
+    
+    <insert id="addMajorByName" parameterType="CourseModel" useGeneratedKeys="true" keyProperty="majorId">
+    insert into t_major (major_name) values (#{majorName});
+    </insert>
+
+    <!-- 删除 -->
+    <update id="delete" parameterType="int">
+        update t_course set course_delete = 0 where course_id = #{courseId};
+    </update>
+</mapper>

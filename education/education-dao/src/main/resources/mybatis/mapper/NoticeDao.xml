@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.NoticeDao">
+	<!-- 新增公告 -->
+	<insert id="sessionNoticeModel">
+		insert into t_notice (
+		notice_name ,
+		notice_inf ,
+		notice_date,
+		notice_target ,
+		notice_create_date,
+		notice_modify_date,
+		notice_modify_person,
+		notice_delete
+		)
+		values (
+		#{notice.noticeName},
+		#{notice.noticeInfo},
+		date_format(#{notice.noticeDate },'%y%m%d'),
+		#{notice.noticeTarget},
+		date_format(#{notice.noticeCreateDate},'%y%m%d'),
+		date_format(#{notice.noticeModifyDate},'%y%m%d'),
+		#{notice.noticeModifyName},
+		#{notice.noticeDel}
+		)
+	</insert>
+	<!-- 查询公告 -->
+	<select id="getNotice" resultType="noticeModel">
+		select notice_id as noticeId,
+		notice_name as noticeName,
+		notice_inf as noticeInfo,
+		notice_date as noticeDate,
+		notice_target as noticeTarget,
+		notice_create_date as noticeCreateDate,
+		notice_modify_date as noticeModifyDate,
+		notice_modify_person as noticeModifyName,
+		notice_delete as noticeDel
+		from t_notice
+		where notice_delete=1
+		and notice_id = #{noticeId}
+	</select>
+
+	<!-- 公告模糊查询+分页 -->
+	<select id="listNoticeByName" resultType="noticeModel">
+		select notice_id as noticeId,
+		notice_name as noticeName,
+		notice_inf as noticeInfo,
+		notice_date as noticeDate,
+		notice_target as noticeTarget,
+		notice_create_date as noticeCreateDate,
+		notice_modify_date as noticeModifyDate,
+		notice_modify_person as noticeModifyName,
+		notice_delete as noticeDel
+		from t_notice
+		where notice_delete = 1
+		<if test="notice.noticeName != null and notice.noticeName != ''">
+			and notice_name like CONCAT('%',#{notice.noticeName},'%')
+		</if>
+		<if test="notice.startDate != null and notice.startDate != ''">
+			and date_format(notice_date,'%y%m%d') &gt;=
+			date_format(#{notice.startDate},'%y%m%d')
+		</if>
+		<if test="notice.endDate != null and notice.endDate != ''">
+			and date_format(notice_date,'%y%m%d') &lt;=
+			date_format(#{notice.endDate},'%y%m%d')
+		</if>
+		order by notice_id
+	</select>
+
+	<!--公告对象查询 -->
+	<select id="querynoticeList" resultType="noticeModel">
+		select
+		notice_id as noticeId,
+		notice_name as noticeName,
+		notice_inf as noticeInfo,
+		notice_date as noticeDate,
+		notice_target as noticeTarget,
+		notice_create_date as noticeCreateDate,
+		notice_modify_date as noticeModifyDate,
+		notice_modify_person as noticeModifyName,
+		notice_delete as noticeDel
+		from t_notice
+		where notice_delete = 1
+	</select>
+</mapper>

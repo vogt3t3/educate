@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.CpersonDao">
+   <!-- 实体类中的和数据库中的数据不一致 张露林 -->
+    <resultMap type="com.education.model.StudentEnterModel" id="enter">
+        <result property="enterId" column="enter_id" />
+        <result property="enterName" column="enter_name" />
+        <result property="enterSex" column="enter_sex" />
+        <result property="enterBirth" column="enter_birth" />
+        <result property="enterNation" column="enter_nation" />
+        <result property="enterIdCard" column="enter_idcard" />
+        <result property="enterPhone" column="enter_phone" />
+        <result property="enterGraduate" column="enter_graduate" />
+        <result property="enterAddress" column="enter_address" />
+        <result property="enterEducation" column="enter_education" />
+        <result property="enterCertificate" column="enter_certificate" />
+        <result property="enterPhoto" column="enter_photo" />
+        <result property="enterEmail" column="enter_email" />
+        <result property="enterCheckState" column="enter_check_state" />
+        <result property="enterCheckDate" column="enter_check_date" />
+        <result property="enterFirstScore" column="enter_first_score" />
+        <result property="enterDate" column="enter_date" />
+        <result property="enterType" column="enter_type" />
+        <result property="enterPayState" column="enter_pay_state" />
+        <result property="enterPayWay" column="enter_pay_way" />
+        <result property="enterPayMoney" column="enter_pay_money" />
+        <result property="enterPayDate" column="enter_pay_date" />
+        <result property="enterDelete" column="enter_delete" />
+        <result property="majorId" column="major_id"/>
+        <result property="majorName" column="major_name"/>
+        <result property="enrollTuition" column="enroll_tuition"/>
+    </resultMap>
+    <!--  审核人员审核学生查看所有学生信息要用分页 -->
+    <select id="queryDentCheck" resultMap="enter">
+		select
+			en.enter_id as enterId,
+       		en.enter_name as enterName,
+        	en.enter_sex as enterSex,
+       		en.enter_birth as enterBirth,
+        	en.enter_nation as enterNation,
+       		en.enter_idcard as enterIdcard,
+       		en.enter_phone as enterPhone,
+        	en.enter_graduate as enterGraduate,
+        	en.enter_address as enterAddress,
+        	en.enter_education as enterEducation,
+       		en.enter_certificate as enterCertificate,
+        	en.enter_photo as enterPhoto,
+        	en.enter_email as enterEmail,
+        	en.enter_check_state as enterCheckState,
+        	en.enter_check_date as enterCheckDate,
+       		en.enter_first_score as enterFirstScore,
+       		en.enter_date as enterDate,
+        	en.enter_type as enterType,
+        	en.enter_pay_state as enterPayState,
+       		en.enter_pay_way as enterPayWay,
+        	en.enter_pay_money as enterPayMoney,
+       		en.enter_pay_date as enterPayDate,
+			ma.major_name as majorMame
+		from t_enter as en,t_major as ma , t_enroll_students as st 
+			where en.major_id=ma.major_id 
+			and st.enroll_id = ma.enroll_id 
+			and en.enter_delete=1
+			and ma.major_delete=1
+			and st.enroll_delete=1
+			and enter_first_score between 0 and 59
+   </select>
+	<!--  审核人员查看所有学生信息要用分页 -->
+   <select id="queryStudent" resultMap="enter">
+   		select 
+   			enter_id,
+   			enter_idcard,
+   			enter_name,
+   			enter_address,
+   			enter_check_state 
+   		from t_enter 
+   			where enter_delete=1
+   </select>
+	<!--  审核人员根据id查看学生详细信息  -->    
+   <select id="queryStudentDetails" resultMap="enter" parameterType="int">
+   		select
+			en.enter_id as enter_id,
+       		en.enter_name as enter_name,
+        	en.enter_sex as enter_sex,
+       		en.enter_birth as enter_birth,
+        	en.enter_nation as enter_nation,
+       		en.enter_idcard as enter_idcard,
+       		en.enter_phone as enter_phone,
+        	en.enter_graduate as enter_graduate,
+        	en.enter_address as enter_address,
+        	en.enter_education as enter_education,
+       		en.enter_certificate as enter_certificate,
+        	en.enter_photo as enter_photo,
+        	en.enter_email as enter_email,
+        	en.enter_check_state as enter_check_state,
+        	en.enter_check_date as enter_check_date,
+       		en.enter_first_score as enter_first_score,
+       		en.enter_date as enter_date,
+        	en.enter_type as enter_type,
+        	en.enter_pay_state as enter_pay_state,
+       		en.enter_pay_way as enter_pay_way,
+        	en.enter_pay_money as enter_pay_money,
+       		en.enter_pay_date as enter_pay_date,
+			ma.major_name as major_name,
+			st.enroll_tuition as enroll_tuition
+		from t_enter as en,t_major as ma , t_enroll_students as st 
+			where en.major_id=ma.major_id 
+			and st.enroll_id = ma.enroll_id 
+			and en.enter_id=#{enterId}
+   </select>
+  	<!-- 审核人员的审核(根据id修改审核状态) -->
+  	<update id="updateStudent" >
+  		update t_enter set enter_check_state=#{enterCheckState} where enter_id=#{enterId}
+  	</update>
+	<!-- 审核人员部分的缴费部分要用分页 -->
+   <select id="queryMoney" resultMap="enter">
+   		select 
+   			en.enter_id as enter_id,
+   			en.enter_name as enter_name,
+   			en.enter_sex as enter_sex,
+   			en.enter_idcard as enter_idcard,
+   			en.enter_pay_money as enter_pay_money,
+   			en.enter_pay_state as enter_pay_state,
+   			ma.major_name as major_name,
+   			st.enroll_tuition as enroll_tuition
+		from t_enter as en , t_major as ma , t_enroll_students as st  
+	where en.major_id = ma.major_id 
+	 and st.enroll_id = ma.enroll_id and enter_delete=1 
+   </select>
+	<!-- 审核人员部分的缴费详情部分   --> 
+   <select id="queryMoneyDetails" resultMap="enter" parameterType="Int">
+   		select
+			en.enter_id as enter_id,
+       		en.enter_name as enter_name,
+        	en.enter_sex as enter_sex,
+       		en.enter_birth as enter_birth,
+        	en.enter_nation as enter_nation,
+       		en.enter_idcard as enter_idcard,
+       		en.enter_phone as enter_phone,
+        	en.enter_graduate as enter_graduate,
+        	en.enter_address as enter_address,
+        	en.enter_education as enter_education,
+       		en.enter_certificate as enter_certificate,
+        	en.enter_photo as enter_photo,
+        	en.enter_email as enter_email,
+        	en.enter_check_state as enter_check_state,
+        	en.enter_check_date as enter_check_date,
+       		en.enter_first_score as enter_first_score,
+       		en.enter_date as enter_date,
+        	en.enter_type as enter_type,
+        	en.enter_pay_state as enter_pay_state,
+       		en.enter_pay_way as enter_pay_way,
+        	en.enter_pay_money as enter_pay_money,
+       		en.enter_pay_date as enter_pay_date,
+			ma.major_name as major_name,
+			st.enroll_tuition as enroll_tuition
+		from t_enter as en,t_major as ma , t_enroll_students as st 
+			where en.major_id=ma.major_id 
+			and st.enroll_id = ma.enroll_id 
+			and en.enter_id=#{enterId}
+   </select>
+   <!-- 审核人员部分的入学成绩部分要用分页 -->   
+   <select id="queryGrade" resultMap="enter">
+   		select 
+   			en.enter_id as enter_id,
+   			en.enter_name as enter_name,
+   			en.enter_sex as enter_sex,
+   			en.enter_idcard as enter_idcard,
+   			en.enter_first_score as enter_first_score,
+   			ma.major_name as major_name
+		from t_enter as en,t_major as ma 
+			where en.major_id=ma.major_id and enter_delete=1
+   </select>
+	<!-- 审核人员部分的入学成绩详情部分   --> 
+   <select id="queryGradeDetails" resultMap="enter" parameterType="Int">
+   		select
+			en.enter_id as enter_id,
+       		en.enter_name as enter_name,
+        	en.enter_sex as enter_sex,
+       		en.enter_birth as enter_birth,
+        	en.enter_nation as enter_nation,
+       		en.enter_idcard as enter_idcard,
+       		en.enter_phone as enter_phone,
+        	en.enter_graduate as enter_graduate,
+        	en.enter_address as enter_address,
+        	en.enter_education as enter_education,
+       		en.enter_certificate as enter_certificate,
+        	en.enter_photo as enter_photo,
+        	en.enter_email as enter_email,
+        	en.enter_check_state as enter_check_state,
+        	en.enter_check_date as enter_check_date,
+       		en.enter_first_score as enter_first_score,
+       		en.enter_date as enter_date,
+        	en.enter_type as enter_type,
+        	en.enter_pay_state as enter_pay_state,
+       		en.enter_pay_way as enter_pay_way,
+        	en.enter_pay_money as enter_pay_money,
+       		en.enter_pay_date as enter_pay_date,
+			ma.major_name as major_name,
+			st.enroll_tuition as enroll_tuition
+		from t_enter as en,t_major as ma , t_enroll_students as st 
+			where en.major_id=ma.major_id 
+			and st.enroll_id = ma.enroll_id 
+			and en.enter_id=#{enterId}
+   </select>
+   <!-- 审核人员部分的历史记录部分要用分页 -->   
+   <select id="queryHistorical" resultMap="enter">
+   		select 	
+			en.enter_id as enter_id,
+			en.enter_name as enter_name,
+			en.enter_idcard as enter_idcard,
+			en.enter_check_state as enter_check_state,
+			en.enter_pay_state as enter_pay_state,
+			en.enter_first_score as enter_first_score,
+			ma.major_name as major_name
+		from t_enter as en,t_major as ma 
+			where en.major_id=ma.major_id  
+			and en.enter_delete=1
+			and ma.major_delete=1
+			 and (en.enter_pay_state=0 
+			 or en.enter_check_state=0 
+			or en.enter_first_score between 0 and 59 )
+   </select>
+	<!-- 审核人员部分的历史记录详情部分   --> 
+   <select id="queryHistoricalDetails1" resultMap="enter" parameterType="Int">
+   		select
+			en.enter_id as enter_id,
+       		en.enter_name as enter_name,
+        	en.enter_sex as enter_sex,
+       		en.enter_birth as enter_birth,
+        	en.enter_nation as enter_nation,
+       		en.enter_idcard as enter_idcard,
+       		en.enter_phone as enter_phone,
+        	en.enter_graduate as enter_graduate,
+        	en.enter_address as enter_address,
+        	en.enter_education as enter_education,
+       		en.enter_certificate as enter_certificate,
+        	en.enter_photo as enter_photo,
+        	en.enter_email as enter_email,
+        	en.enter_check_state as enter_check_state,
+        	en.enter_check_date as enter_check_date,
+       		en.enter_first_score as enter_first_score,
+       		en.enter_date as enter_date,
+        	en.enter_type as enter_type,
+        	en.enter_pay_state as enter_pay_state,
+       		en.enter_pay_way as enter_pay_way,
+        	en.enter_pay_money as enter_pay_money,
+       		en.enter_pay_date as enter_pay_date,
+			ma.major_name as major_name,
+			st.enroll_tuition as enroll_tuition
+		from t_enter as en,t_major as ma , t_enroll_students as st 
+			where en.major_id=ma.major_id 
+			and st.enroll_id = ma.enroll_id 
+			and en.enter_id=#{enterId}
+   </select>
+</mapper>

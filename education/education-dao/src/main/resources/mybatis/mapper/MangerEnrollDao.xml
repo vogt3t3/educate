@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.education.dao.MangerEnrollDao">
+ <!-- 统计所有信息条数 -->
+  <select id="queryEnrollStudent"  resultType="enrollStudents" parameterType="Integer">
+  select
+  e.enroll_id,
+  e.major_id,
+  m.major_name as majorName,
+  e.enroll_student_num as enrollStudentNum,
+  e.enroll_tuition as enrollTuition,
+  e.enroll_edu_system as enrollEduSystem,
+  e.enroll_area as enrollArea,
+  e.enroll_create_date as enrollCreateDate,
+  e.enroll_model as enrollModel
+  from t_enroll_students e,t_major m 
+  where enroll_delete=1 and e.major_id = m.major_id
+   <if test="_parameter !=null  and _parameter != ''">
+    and e.major_id = #{searchMessage}   
+</if>
+  </select>
+  <!-- 查询所有专业编号和专业名称做为下拉框的选项 -->
+  <select id="queryMajorModel" resultType="majorModel">
+  select
+  major_id as majorId,
+  major_name as majorName
+  from t_major where major_delete=1
+  </select>
+  
+   <!-- 添加功能 -->
+  <insert id="addEnroll" parameterType="enrollStudents">
+  insert into t_enroll_students values(
+  null,#{majorId},#{enrollStudentNum},#{enrollTuition},#{enrollEduSystem},#{enrollArea}
+  ,#{enrollCreateDate},#{enrollModel},#{enrollModifyPerson},#{enrollModifyDate},1
+  )
+  </insert>
+  
+  <select id="queryEnrollStudentId" resultType="enrollStudents" parameterType="Integer">
+  select 
+  e.enroll_id,
+  e.major_id as majorId,
+  m.major_name as majorName,
+  e.enroll_student_num as enrollStudentNum,
+  e.enroll_tuition as enrollTuition,
+  e.enroll_edu_system as enrollEduSystem,
+  e.enroll_area as enrollArea,
+  e.enroll_create_date as enrollCreateDate,
+  e.enroll_model as enrollModel
+  from t_enroll_students e,t_major m 
+  where e.enroll_delete=1 and e.enroll_id =#{enroll_id} and e.major_id = m.major_id
+  </select>
+  
+  <!-- 更新招生计划表 -->
+  <update id="updateEnrollStudent" parameterType="enrollStudents">
+  update t_enroll_students set major_id=#{majorId},enroll_student_num = #{enrollStudentNum}
+  ,enroll_tuition=#{enrollTuition},enroll_edu_system=#{enrollEduSystem},enroll_area =#{enrollArea},
+  enroll_model=#{enrollModel},enroll_modify_date=#{enrollModifyDate} where  enroll_id =#{enroll_id}
+  
+  </update>
+  
+  <!-- 删除功能更改招生计划的状态 -->
+  <update id="deleteEnrollStudent" parameterType="Integer">
+  update t_enroll_students set enroll_delete = 0 where enroll_id =#{enroll_id}
+  </update>
+  
+  </mapper>

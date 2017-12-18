@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StudentManagerDao">
+	<!--查询学生学生的信息  -->
+	<resultMap type="studentModel" id="getStudent">
+		<result property="studentId" column="student_id" />
+		<result property="majorId" column="major_id" />
+		<result property="studentName" column="student_name" />
+		<result property="studentSex" column="student_sex" />
+		<result property="studentIdcard" column="student_idcard" />
+		<result property="studentType" column="student_type" />
+		<result property="majorName" column="major_name" />
+		<result property="stuEducation" column="student_education" />
+		<result property="studentPhone" column="student_phone" />
+		<result property="studentDate" column="student_date" />
+	</resultMap>
+	<!--根据Id查询学生基本信息 -->
+	<resultMap type="studentModel" id="queryStu">
+		<result property="studentId" column="student_id" />
+		<result property="majorId" column="major_id" />
+		<result property="studentName" column="student_name" />
+		<result property="studentSex" column="student_sex" />
+		<result property="studentIdcard" column="student_idcard" />
+		<result property="studentPhone" column="student_phone" />
+	</resultMap>
+	<!--根据Id查询学生详细信息 -->
+	<resultMap type="studentModel" id="getStuDetail">
+		<result property="studentId" column="student_id" />
+		<result property="studentName" column="student_name" />
+		<result property="majorId" column="major_id" />
+		<result property="studentSex" column="student_sex" />
+		<result property="stuBirth" column="student_birth" />
+		<result property="studentNation" column="student_nation" />
+		<result property="studentIdcard" column="student_idcard" />
+		<result property="studentGraduate" column="student_graduate" />
+		<result property="studentType" column="student_type" />
+		<result property="majorName" column="major_name" />
+		<result property="firstMoney" column="student_first_money" />
+		<result property="secondMoney" column="student_second_money" />
+		<result property="studentDate" column="student_date" />
+		<result property="stuAddress" column="student_address" />
+		<result property="studentPhone" column="student_phone" />
+		<result property="studentGraduation" column="student_graduation" />
+	</resultMap>
+	<!--查询所有学生的信息 -->
+	<select id="getStudentListPage" resultMap="getStudent">
+		select
+		s.student_id,s.student_name,s.student_sex,s.student_idcard,s.student_type,
+		m.major_name,s.student_education,s.student_phone,s.student_date,s.student_delete
+		from
+		t_student as s
+		left join t_major as m on s.major_id =m.major_id
+		<where>
+			<if test="student_name!=null">
+				s.student_name like CONCAT('%', #{student_name}, '%')
+			</if>
+			<if test="student_id!=null">
+				and s.student_id like CONCAT('%', #{student_id}, '%')
+			</if>
+			<if test="student_delete!=null">
+				and student_delete=1
+			</if>
+		</where>
+	</select>
+	<!--根据Id查询学生基本信息 -->
+	<select id="queryStuById" resultMap="queryStu">
+		select
+		s.student_id,s.student_name,s.student_sex,s.student_idcard,s.student_phone
+		from t_student as s left join t_major as m on s.major_id
+		=m.major_id
+		where student_id=#{studentId}
+	</select>
+	<!-- 根据Id查询学生的详细信息 -->
+	<select id="getStudentDetail" resultMap="getStuDetail">
+		select
+		s.student_id,s.student_name,s.student_sex,s.student_birth,s.student_nation,s.student_idcard,
+		s.student_graduate,s.student_type,m.major_name,s.student_first_money,s.student_second_money,
+		s.student_date,s.student_address,s.student_phone,s.student_graduation,s.student_delete
+		from t_student as s left join t_major as m on s.major_id =m.major_id
+		where student_id=#{studentId}
+	</select>
+	<!--修改学生信息 -->
+	<update id="updateStudent" parameterType="studentModel">
+		update t_student set
+		student_name=#{studentName},
+		student_sex=#{studentSex},student_idcard=#{studentIdcard},student_phone=#{studentPhone}
+		where student_id=#{studentId}
+	</update>
+	<!--删除学生 -->
+	<update id="deleteStudent" parameterType="int">
+		update t_student set
+		student_delete=0 where student_id=#{studentId}
+	</update>
+</mapper>
+
+
+
+

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StudentExamDao">
+	<!-- 1.根据学生id查他的所有课程 -->
+	<select id="queryCourses" parameterType="int" resultType="courseModel">
+		SELECT
+		c.course_id as courseId,
+		c.course_name as courseName
+		FROM
+		student_course
+		sc left join t_student s on
+		sc.student_id = s.student_id
+		left join
+		t_course c on sc.course_id =
+		c.course_id
+		where sc.student_id =
+		#{studentId}
+	</select>
+	<!-- 1.根据课程 查考试信息 -->
+	<select id="queryExams" parameterType="int" resultType="ExamCourseModel">
+		<!-- select exam_id as examId,course_id as courseId,exam_place as examPlace, 
+			exam_time as examTime, exam_appoint_time as examAppointTime, exam_form as 
+			examForm,exam_addtime as examAddtime from t_exam where course_id =#{courseId} 
+			order by exam_time desc limit 1 -->
+		select
+		e.exam_id as examId,
+		e.course_id as courseId,
+		e.exam_place as
+		examPlace,
+		e.exam_time as examTime,
+		e.exam_appoint_time as
+		examAppointTime,
+		e.exam_form as examForm,
+		e.exam_addtime as examAddtime,
+		c.course_name as examname
+		from t_exam e join t_course c on e.course_id
+		= c.course_id
+		where e.course_id =#{courseId}
+		order by exam_time desc
+		limit 1
+	</select>
+
+	<!-- 2.根据学生id 考试id，查询考试状态 -->
+	<!-- <select id="queryState" resultType="examCourseModel"> select stu_id 
+		as studentId, exam_id as examId, order_state as order_state from t_exam_order 
+		where stu_id = #{stu_id} and exam_id = #{exam_id} </select> -->
+
+	<insert id="insertState">
+		insert into t_exam_order(stu_id,exam_id,order_state)
+		values(#{stu_id},#{exam_id},1)
+	</insert>
+
+
+	<!-- *************************************赵 润*********************************************************** -->
+	<resultMap type="SelectModel" id="selectModel">
+		<id property="selectId" column="select_id" />
+		<result property="selectName" column="select_name" />
+		<result property="selectA" column="select_a" />
+		<result property="selectB" column="select_b" />
+		<result property="selectC" column="select_c" />
+		<result property="selectD" column="select_d" />
+		<result property="selectAnswer" column="select_answer" />
+		<result property="selectPoint" column="select_point" />
+	</resultMap>
+
+	<resultMap type="JudgeTopic" id="judgeTopic">
+		<id property="judgeId" column="judge_id" />
+		<result property="judgeName" column="judge_name" />
+		<result property="judgeOne" column="judge_one" />
+		<result property="judgeTwo" column="judge_two" />
+		<result property="judgeAnswer" column="judge_answer" />
+		<result property="judgePoint" column="judge_point" />
+	</resultMap>
+
+	<!-- 查询题库storeId中判断题数量 -->
+	<!-- <select id="countSelect" resultType="int"> select count(*) from t_select 
+		where score_type=#{score_type} and course_id = #{course_id} and select_delete=1 
+		</select> -->
+
+	<!-- 查询题库storeId中选择题数量 -->
+	<!-- <select id="countJudge" resultType="int"> select count(*) from t_judge 
+		where score_type=#{score_type} and course_id = #{course_id} and judge_delete=1 
+		</select> -->
+
+	<!-- 题库中判断题 课程为1的 试题id集合 /选择题@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+	<select id="countSelect" resultType="selectModel">
+		<!-- select select_id from t_select where score_type=#{score_type} and 
+			course_id = #{course_id} and select_delete=1 -->
+		select
+		select_id as selectId,
+		select_name as selectName,
+		select_a as selectA,
+		select_b as selectB,
+		select_c as selectC,
+		select_d as selectD,
+		select_answer as selectAnswer ,
+		select_point as selectPoint
+		from t_select
+		where score_type=#{score_type}
+		and
+		course_id = #{course_id}
+		and select_delete=1
+
+	</select>
+
+	<select id="countJudge" resultType="judgeTopic">
+		select
+			judge_id as judgeId,
+			judge_name as judgeName,
+			judge_one as judgeOne,
+			judge_two as judgeTwo,
+			judge_answer as judgeAnswer,
+			judge_point as judgePoint
+		from t_judge
+		where score_type=#{score_type}
+		and course_id = #{course_id}
+		and
+		judge_delete=1
+	</select>
+	<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+
+
+	<!-- 获取随机生成的 判断题 -->
+	<select id="listJudge" parameterType="java.util.Set" resultMap="judgeTopic">
+		select
+		judge_id,judge_name,
+		judge_one,judge_two,
+		judge_answer,judge_point
+
+		from t_judge
+		where judge_delete=1
+		and
+		score_type=#{score_type}
+		and course_id = #{course_id}
+		and judge_id in
+		<foreach collection="judgeSet" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 获取随机生成的 选择题 -->
+	<select id="listSelect" parameterType="java.util.Set" resultMap="selectModel">
+		select
+		select_id,select_name,select_a,select_b,select_c,select_d,select_answer,select_point
+		from t_select b where b.select_delete=1
+		and score_type=#{score_type}
+		and course_id = #{course_id}
+		and select_id in
+		<foreach collection="selectSet" index="index" item="item"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	   <!-- 更新成绩 -->
+    <update id="saveScore" parameterType="Map">
+        update t_score set score_exam = #{total} 
+        where course_id = #{course_id} and student_id = #{studentId}
+    </update>
+</mapper>

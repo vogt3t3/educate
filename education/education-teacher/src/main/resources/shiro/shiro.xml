@@ -1,0 +1,69 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+    <!-- web.xml中shiro的filter对应的bean -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager" />
+        <!-- loginUrl认证提交地址，如果没有认证将会请求此地址进行认证，请求此地址将由formAuthenticationFilter进行表单认证 -->
+        <property name="loginUrl" value="/index.html#/login"/>
+        <!-- <property name="unauthorizedUrl" value="/quanxian"/> -->
+        <!-- 过虑器链定义，从上向下顺序执行，一般将/**放在最下边 -->
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap" />
+    </bean>
+
+    <!-- 配置一个 权限表 生成的工厂bean -->
+    <bean id="filterChainDefinitionMapFactoryBean"
+        class="com.education.teacher.shiro.FilterChainDefinitionMapFactoryBean"></bean>
+    <!-- 配置一个权限表的bean -->
+    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapFactoryBean"
+        factory-method="buildFilterChainDefinitionMap"></bean>
+
+    <!-- 缓存管理器 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:shiro/shiro-ehcache.xml" />
+    </bean>
+
+    <!-- 会话管理器 -->
+    <bean id="sessionManager"
+        class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- session的失效时长，单位毫秒 -->
+        <property name="globalSessionTimeout" value="600000" />
+        <!-- 删除失效的session -->
+        <property name="deleteInvalidSessions" value="true" />
+    </bean>
+
+    <!-- 配置安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="userRealm" />
+        <!-- 注入缓存管理器 -->
+        <property name="cacheManager" ref="cacheManager" />
+        <!-- 注入session管理器 -->
+        <property name="sessionManager" ref="sessionManager" />
+    </bean>
+    <!-- 自定义 realm，用来处理登陆操作 -->
+    <bean id="userRealm" class="com.education.teacher.shiro.CustomRealm">
+    </bean>
+    <!--Shiro生命周期处理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+    <!-- 开启aop，对类代理 -->
+    <aop:config proxy-target-class="true"></aop:config>
+    <!-- 开启shiro注解支持 -->
+    <bean
+        class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+</beans>
+

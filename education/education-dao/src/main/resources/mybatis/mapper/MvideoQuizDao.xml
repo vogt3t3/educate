@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.MvideoQuizDao">
+	<resultMap type="StudentQuizModel" id="Sqmmap">
+		<id column="quiz_id" property="quizId" />
+		<result column="video_id" property="videoId" />
+		<result column="reply_id" property="replyid" />
+		<result column="quiz_date" property="quizDateStr" />
+		<result column="quiz_content" property="quizContent" />
+		<result column="quiz_delete" property="quizDelete" />
+		<association property="tl" javaType="TeacherReplyModel">
+			<result column="reply_content" property="replyContent" />
+		</association>
+	</resultMap>
+	<select id="seleVideoQuiz" resultMap="Sqmmap">
+		select
+		s.quiz_id,
+		s.video_id,
+		s.reply_id,
+		s.quiz_date,
+		s.quiz_content,
+		s.quiz_delete,
+		t.reply_content
+		from
+		t_studentQuiz s left join t_teacherReply t
+		on
+		s.reply_id=t.reply_id
+		where
+		s.quiz_delete=1
+	</select>
+	<select id="seleMhoneVideoQuiz" resultMap="Sqmmap" parameterType="String">
+		select
+		s.quiz_id,
+		s.video_id,
+		s.reply_id,
+		s.quiz_date,
+		s.quiz_content,
+		s.quiz_delete,
+		t.reply_content
+		from
+		t_studentQuiz s left join t_teacherReply t
+		on
+		s.reply_id=t.reply_id
+		where
+		s.quiz_content
+		like
+		#{st}
+		and 
+		s.quiz_delete=1
+    </select>
+    	<select id="seleQuizint" resultMap="Sqmmap" parameterType="int">
+		select
+		s.quiz_id,
+		s.video_id,
+		s.reply_id,
+		s.quiz_date,
+		s.quiz_content,
+		s.quiz_delete,
+		t.reply_content
+		from
+		t_studentQuiz s left join t_teacherReply t
+		on
+		s.reply_id=t.reply_id
+		where
+		s.quiz_id
+		like
+		#{it}
+		and 
+		s.quiz_delete=1
+    </select>
+    <insert id="updateVideoQuiz"  parameterType="TeacherReplyModel">
+	    insert
+	    into
+	    t_teacherReply
+	    values(
+	    #{replyId},
+	    #{teacherId},
+	    #{quizid},
+	    #{replyTime},
+	    #{replyContent},
+	    #{replyDelete})
+    </insert>
+   <update id="delVideoQuiz" parameterType="int">
+	    update t_studentQuiz set quiz_delete=0 where quiz_id=#{qid}
+	</update>
+</mapper>

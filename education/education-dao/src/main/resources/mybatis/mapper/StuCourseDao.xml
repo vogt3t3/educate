@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StuCourseDao">
+    <select id="querySection" parameterType="int"
+        resultType="SectionDo">
+        select section_id as sectionId,section_name as sectionName,section_addtime as secAddtime,teacher_realname as teacherName 
+        from t_section as section,t_teacher as teacher where section.teacher_id = teacher.teacher_id and section.course_id = #{courseId}
+    </select>
+</mapper>

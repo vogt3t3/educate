@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.MteacherDao">
+   <!-- 实体类中的和数据库中的数据不一致 张露林 -->
+    <resultMap type="com.education.model.NoticeModel" id="notice">
+        <result property="noticeId" column="notice_id" />
+        <result property="noticeName" column="notice_name" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="noticeInfo" column="notice_inf" />
+        <result property="noticeDate" column="notice_date" />
+        <result property="noticeTarget" column="notice_target" />
+        <result property="noticeCreateDate" column="notice_create_date" />
+        <result property="noticeModifyDate" column="notice_modify_date" />
+        <result property="noticeModifyPerson" column="notice_modify_person" />
+        <result property="noticeDelete" column="notice_delete" />
+    </resultMap>
+	<!--  审核人员查看所有学生信息要用分页 -->
+   <select id="queryAdvertising" resultMap="notice">
+   		select 
+   			notice_id,
+   			notice_name,
+   			notice_date
+   		from t_notice 
+   			where notice_delete=1 and notice_target=1 or notice_target=0
+   </select>
+	<!--  审核人员根据id查看学生详细信息  -->    
+   <select id="queryAdvertisingDetails" resultMap="notice">
+   		select 
+   			notice_id,
+   			notice_name,
+   			notice_inf
+   		from t_notice 
+   			where notice_delete=1 
+   			and notice_target=1 
+   			and notice_id=#{noticeId}
+   </select>
+</mapper>

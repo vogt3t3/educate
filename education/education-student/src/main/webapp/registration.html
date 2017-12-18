@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet"
+	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script
+	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous">	
+</script>
+<body>
+	<div>
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h1>报名 信 息 填 写</h1>
+				<hr />
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-1"
+				style="margin: 20px 0 0 60px; border: 1px solid CadetBlue; height: 400px; width: 150px;">
+				<ul class="list-unstyled">
+					<li><h3>
+							<a>报名须知</a>
+						</h3></li>
+					<hr />
+					<li><h3>
+							<a>报名</a>
+						</h3></li>
+					<hr />
+					<li><h3>
+							<a>查询</a>
+						</h3></li>
+					<hr />
+					<li><h3>
+							<a>在线测试</a>
+						</h3></li>
+					<hr />
+					<li><h3>
+							<a>缴费</a>
+						</h3></li>
+				</ul>
+			</div>
+			<div class="col-md-10"
+				style="margin: 20px 0 0 10px; border: 1px solid CadetBlue; height: 680px; width: 60%;">
+				<div style="width: 500px; margin: 20px 0 0 170px; width: 50%;">
+					<!-- 报名表单 -->
+					<form>
+						<label for="exampleInputPassword1">姓名:</label> <input type="text"
+							name="enterName" class="form-control" id="exampleInputEmail1"
+							placeholder="Name"> <label for="optionsRadios1">
+							性别:</label> <label> <input type="radio" name="optionsRadios"
+							id="optionsRadios1" value="option1" checked name="enterSex">
+							<!-- &mdash;  横线-->男
+						</label> <label> <input type="radio" name="optionsRadios"
+							id="optionsRadios2" value="option2" name="enterSex"> 女
+						</label> <br /> <label for="exampleInputPassword1">民族:</label> <input
+							type="text" class="form-control" id="exampleInputPassword1"
+							name="enterNation" placeholder="Nation"> <label
+							for="exampleInputPassword1">身份证:</label> <input type="text"
+							class="form-control" id="exampleInputPassword1"
+							name="enterIdCard" placeholder="IdCard"> <label
+							for="exampleInputPassword1">手机号:</label> <input type="text"
+							class="form-control" id="exampleInputPassword1" name="enterPhone"
+							placeholder="Phone"> <label for="exampleInputPassword1">毕业院校:</label>
+						<input type="text" class="form-control" id="exampleInputPassword1"
+							name="enterGraduate" placeholder="Graduate"> <label
+							for="exampleInputPassword1">家庭住址:</label> <input type="text"
+							class="form-control" id="exampleInputPassword1"
+							name="enterAddress" placeholder="Address"> <label
+							for="exampleInputFile">毕业证书照片:</label> <input type="file"
+							id="exampleInputFile" name="photo">
+						<p class="help-block">
+							请上传你的毕业证书照片
+							<请保证清晰且真实>
+						</p>
+						<h5>
+							<b>选择专业:</b>
+						</h5>
+						<select class="form-control" name="majorId">
+							<option>计算机科学</option>
+							<option>社会心理学</option>
+							<option>国际贸易</option>
+							<option>化学</option>
+						</select>
+						<h5>
+							<b>学历类型:</b>
+						</h5>
+						<select class="form-control" name="enterType">
+							<option>高升专</option>
+							<option>专升本</option>
+						</select>
+						<p style="" class="text-center">
+							<button type="button" class="btn btn-primary"
+								onclick="joinOrder()">提交信息</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="reset" class="btn btn-danger">重新输入</button>
+						</p>
+					</form>
+				</div>
+				<!-- 报名表单  end-->
+			</div>
+			<!-- 底部 -->
+			<div class="row">
+				<hr />
+				<div class="col-md-12 text-center">
+					<h4>©2017 yawushan 使用前必读 | 华育远程教育平台 | 合作平台</h4>
+				</div>
+				<hr />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

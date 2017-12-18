@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.TeacherDao">
+	<resultMap type="com.education.model.TeacherModel" id="GetTeaInfoMap">
+		<result property="teacherId" column="teacher_id" />
+		<result property="teacherRealName" column="teacher_realname" />
+		<result property="teacherSex" column="teacher_sex" />
+		<result property="courseName" column="course_name" />
+		<result property="teacherSchool" column="teacher_school" />
+		<result property="teacherRecord" column="teacher_record" />
+		<result property="teacherBirth" column="teacher_birth" />
+		<result property="teacherAdderss" column="teacher_address" />
+		<result property="teacherEmail" column="teacher_email" />
+		<result property="teacherPhone" column="teacher_phone" />
+		<result property="teacherPolitical" column="teacher_political" />
+		<result property="teacherNational" column="teacher_national" />
+		<result property="teacherNative" column="teacher_native" />
+		<result property="teacherDegree" column="teacher_degree" />
+		<result property="teacherCategory" column="teacher_category" />
+		<result property="teacherTranning" column="teacher_training" />
+		<result property="teacherReward" column="teacher_reward" />
+		<result property="teacherPunish" column="teacher_punish" />
+		<result property="teacherDetail" column="teacher_detail" />
+		<result property="teacherPhoto" column="teacher_photo" />
+		<result property="roleDesc" column="role_desc" />
+		<result property="teacherPwd" column="teacher_password" />
+	</resultMap>
+
+	<!-- 获取分页的教师列表 -->
+	<select id="getPageTeachers" resultMap="GetTeaInfoMap">
+		select
+		t.*,c.course_name,r.role_desc
+		from t_course c,t_teacher t,t_role
+		r
+		<where>
+			<if test="true">
+				and t.course_id=c.course_id and r.role_id=t.role_id
+			</if>
+			<if test="teacherRealName!=null and teacherRealName!=''">
+				and t.teacher_realname like
+				concat('%',#{teacherRealName},'%')
+			</if>
+			<if test="teacherId!=null">
+				and t.teacher_id=#{teacherId}
+			</if>
+		</where>
+	</select>
+	<!-- 查询角色名称 -->
+	<select id="getRole" resultType="String">
+		select role_desc from t_role
+	</select>
+	<!-- 更改指定教师信息 -->
+	<update id="updateTeacherInfo" parameterType="teacherModel">
+		update t_teacher
+		set teacher_realname=#{teacherRealName},
+		course_id=#{courseId},
+		role_id=#{roleId},
+		teacher_sex=#{teacherSex},
+		teacher_school=#{teacherSchool},
+		teacher_record=#{teacherRecord},
+		teacher_birth=#{teacherBirth},
+		teacher_address=#{teacherAdderss},
+		teacher_email=#{teacherEmail},
+		teacher_phone=#{teacherPhone},
+		teacher_political=#{teacherPolitical},
+		teacher_national=#{teacherNational},
+		teacher_degree=#{teacherDegree},
+		teacher_category=#{teacherCategory},
+		teacher_training=#{teacherTranning},
+		teacher_reward=#{teacherReward},
+		teacher_punish=#{teacherPunish},
+		teacher_detail=#{teacherDetail},
+		teacher_password=#{teacherPwd}
+		where teacher_id=#{teacherId}
+	</update>
+	<!-- 根据课程姓名查询课程Id -->
+	<select id="getCourseId" parameterType="String" resultType="int">
+		select course_id from t_course where course_name like
+		concat('%',#{courseName},'%')
+	</select>
+	<!-- 根据角色名称查询课程Id -->
+	<select id="getRoleId" parameterType="String" resultType="int">
+		select
+		role_id from t_role where role_desc like
+		concat('%',#{roleDesc},'%')
+	</select>
+	<!-- 删除指定教师 -->
+	<update id="delTeacher" parameterType="int">
+		update t_teacher
+		set
+		teacher_delete=0
+		where
+		teacher_id=#{teacherId}
+	</update>
+	<!-- 新增教师 -->
+	<insert id="insertTeacher" parameterType="teacherModel">
+		insert into
+		t_teacher(teacher_realname,course_id,role_id,teacher_sex,teacher_school,teacher_record,
+		teacher_birth,teacher_address,teacher_email,teacher_phone,teacher_political,teacher_national,teacher_native,
+		teacher_degree,teacher_category,teacher_training,teacher_reward,teacher_punish,teacher_detail,teacher_password,teacher_photo,teacher_create_date,
+		teacher_last_logindate,teacher_login_sumtime,teacher_modify_person,teacher_modify_date,teacher_delete)
+		values(#{teacherRealName},#{courseId},#{roleId},#{teacherSex},#{teacherSchool},#{teacherRecord},#{teacherBirth},#{teacherAdderss},
+		#{teacherEmail},#{teacherPhone},#{teacherPolitical},#{teacherNational},#{teacherNative},#{teacherDegree},#{teacherCategory},#{teacherTranning},
+		#{teacherReward},#{teacherPunish},#{teacherDetail},#{teacherPwd},#{teacherPhoto},#{teacherCreateDate},#{teacherLastLoginDate},#{teacherSuntime},
+		#{teacherModifyPerson},#{teacherModifyDate}, #{teacherDelete})
+	</insert>
+
+</mapper>
+
+

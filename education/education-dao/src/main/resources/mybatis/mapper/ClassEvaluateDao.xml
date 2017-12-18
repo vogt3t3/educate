@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.ClassEvaluateDao">
+   
+   <!-- 添加课程评价信息 -->
+   <insert id="addEvaluate" parameterType="classEvaluate">
+        insert into t_class_evaluate values(null,null,#{courseId},#{classEvaluateContent},now(),1)
+   </insert>
+</mapper>

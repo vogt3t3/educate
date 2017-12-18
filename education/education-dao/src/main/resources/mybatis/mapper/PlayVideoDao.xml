@@ -1,0 +1,11 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.PlayVideoDao">
+  
+  <select id="getVideo" parameterType="int" resultType="videoModel">
+    select video.video_id as videoId,video_name as videoName,video_path as videoPath 
+    from t_video as video left join t_part_section as partSection on video.video_id = partSection.video_id
+    and video.part_id=partSection.part_id where partSection.part_id =1
+  </select>
+</mapper>

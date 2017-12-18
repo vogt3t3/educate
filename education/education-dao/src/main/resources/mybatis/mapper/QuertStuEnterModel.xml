@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.QuertStuEnterModel">
+   <!-- 实体类中的和数据库中的数据不一致 张露林 -->
+    <resultMap type="com.education.model.StudentEnterModel" id="enter">
+        <result property="enterId" column="enter_id" />
+        <result property="enterName" column="enter_name" />
+        <result property="enterSex" column="enter_sex" />
+        <result property="enterBirth" column="enter_birth" />
+        <result property="enterNation" column="enter_nation" />
+        <result property="enterIdCard" column="enter_idcard" />
+        <result property="enterPhone" column="enter_phone" />
+        <result property="enterGraduate" column="enter_graduate" />
+        <result property="enterAddress" column="enter_address" />
+        <result property="enterEducation" column="enter_education" />
+        <result property="enterCertificate" column="enter_certificate" />
+        <result property="enterPhoto" column="enter_photo" />
+        <result property="enterEmail" column="enter_email" />
+        <result property="enterCheckState" column="enter_check_state" />
+        <result property="enterCheckDate" column="enter_check_date" />
+        <result property="enterFirstScore" column="enter_first_score" />
+        <result property="enterDate" column="enter_date" />
+        <result property="enterType" column="enter_type" />
+        <result property="enterPayState" column="enter_pay_state" />
+        <result property="enterPayWay" column="enter_pay_way" />
+        <result property="enterPayMoney" column="enter_pay_money" />
+        <result property="enterPayDate" column="enter_pay_date" />
+        <result property="enterDelete" column="enter_delete" />
+        <result property="majorId" column="major_id"/>
+        <result property="majorName" column="major_name"/>
+        <result property="enrollTuition" column="enroll_tuition"/>
+    </resultMap>
+    <!--  审核人员审核学生查看所有学生信息要用分页 -->
+    <select id="selectEnterModel" resultMap="enter">
+        select 
+            en.enter_id as enterId,
+            en.enter_name as enterName,
+            en.enter_sex as enterSex,
+            en.enter_idcard as enterIdcard,
+            en.enter_pay_money as enterPayMoney,
+            en.enter_pay_state as enterPayState,
+            ma.major_name as majorName,
+            st.enroll_tuition as enroll_tuition
+        from t_enter as en , t_major as ma , t_enroll_students as st  
+    where en.major_id = ma.major_id 
+     and st.enroll_id = ma.enroll_id and en.enter_delete=1 and en.enter_id=#{enterId}
+
+   </select>
+    
+    <update id="updateStuEnterModel" >
+		update    t_enter 
+		set       enter_pay_date=date_format(now(),'%y%m%d'), 
+		          enter_pay_money=#{enterPayMoney},
+		          enter_pay_way=#{enterPayWay},
+		          enter_pay_state=1 
+		where     enter_idcard=#{enterIdcard}
+    </update>
+    <!--  审核人员审核学生查看所有学生信息要用分页 -->
+    <select id="selectStuEnterModel" resultMap="enter">
+        select
+            en.enter_id as enterId,
+            en.enter_name as enterName,
+            en.enter_sex as enterSex,
+            en.enter_birth as enterBirth,
+            en.enter_nation as enterNation,
+            en.enter_idcard as enterIdcard,
+            en.enter_phone as enterPhone,
+            en.enter_graduate as enterGraduate,
+            en.enter_address as enterAddress,
+            en.enter_education as enterEducation,
+            en.enter_certificate as enterCertificate,
+            en.enter_photo as enterPhoto,
+            en.enter_email as enterEmail,
+            en.enter_check_state as enterCheckState,
+            en.enter_check_date as enterCheckDate,
+            en.enter_first_score as enterFirstScore,
+            en.enter_date as enterDate,
+            en.enter_type as enterType,
+            en.enter_pay_state as enterPayState,
+            en.enter_pay_way as enterPayWay,
+            en.enter_pay_money as enterPayMoney,
+            en.enter_pay_date as enterPayDate,
+            ma.major_name as majorMame
+        from t_enter as en,t_major as ma , t_enroll_students as st 
+            where en.major_id=ma.major_id 
+            and st.enroll_id = ma.enroll_id 
+            and en.enter_delete=1
+            and en.enter_idcard=#{enterIdcard}
+   </select>
+   </mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StucostmanagerDao">
+     
+    <!-- 遍历学费信息（分页查询  + 模糊查询） -->
+    <select id="listStucostBy" resultType="studentModel">
+        select  student_id as studentId,
+                student_name as studentName,
+                student_sex as studentSex,
+                student_education as stuEducation,
+                student_date as studentDate,
+                student_first_money as firstMoney,
+                student_first_money_time as firstMoneyTime,
+                student_second_money as secondMoney,
+                student_second_money_time as secondMoneyTime
+        from    t_student s
+        where   student_delete = 1
+        
+        <if test="stu.studentId != 0">
+            <!-- 按学生编号  -->
+            and     student_id=#{stu.studentId}
+        </if>
+        
+        <if test="stu.studentName != null and stu.studentName != ''">
+            <!-- 按学生姓名 -->
+            and     student_name like CONCAT('%',#{stu.studentName},'%')
+        </if>
+        
+        <if test="stu.studentSex != null and stu.studentSex != ''">
+            <!-- 按学生性别 -->
+            and     student_sex = #{stu.studentSex}
+        </if>
+        
+        <if test="stu.stuEducation != null and stu.stuEducation != ''">
+            <!-- 按学生学历 -->
+            and     student_education = #{stu.stuEducation}
+        </if>
+        
+        <!--  按入学日期 -->
+        <if test="stu.startDate != null and stu.startDate != ''">
+            and     date_format(student_date,'%y%m%d') &gt;=date_format(#{stu.startDate},'%y%m%d')
+        </if>
+        <if test="stu.endDate != null and stu.endDate != ''">
+            and     date_format(student_date,'%y%m%d') &lt;=date_format(#{stu.endDate},'%y%m%d')
+        </if>
+        order   by student_id
+    </select>
+    
+    <!-- 未交学费【以现在时间减去入校时间算出应该交的学费】（人） -->
+    <select id="listStucostUnpaid" resultType="studentModel">
+        select  student_id as studentId,
+                student_name as studentName,
+                student_sex as studentSex,
+                student_education as stuEducation,
+                student_date as studentDate,
+                student_first_money as firstMoney,
+                student_first_money_time as firstMoneyTime,
+                student_second_money as secondMoney,
+                student_second_money_time as secondMoneyTime
+        from    t_student s
+        where   student_delete = 1
+        and     TIMESTAMPDIFF(YEAR, student_date, now()) >= 1
+    </select>
+    
+    <!-- 更新学费记录（按学生编号） -->
+    <update id="updateStucostById">
+        update  t_student
+        set   <if test="stu.firstMoney != null and stu.firstMoney != ''">
+                <!-- 判断第一次交费是否为空 -->
+                student_first_money = #{stu.firstMoney},
+              </if>
+              <if test="stu.firstMoneyTime != null and stu.firstMoneyTime != ''">
+                <!-- 判断第一次交费时间是否为空 -->
+                student_first_money_time = date_format(#{stu.firstMoneyTime},'%y%m%d'),
+              </if>
+              <if test="stu.secondMoney != null and stu.secondMoney != ''">
+                <!-- 判断第二次交费是否为空 -->
+                student_second_money = #{stu.secondMoney},
+              </if>
+              <if test="stu.secondMoneyTime != null and stu.secondMoneyTime != ''">
+                <!-- 判断第二次交费时间是否为空 -->
+                student_second_money_time = date_format(#{stu.secondMoneyTime},'%y%m%d'),
+              </if>
+                student_modify_person = #{stu.modifyPerson},
+                student_modify_date = date_format(now(),'%y%m%d')
+        where   student_delete = 1 
+        and     student_id=#{stu.studentId}
+    </update>
+
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.IEnterDao">
+    <insert id="addstu" parameterType="studentEnterModel">
+        insert into t_enter(
+        major_id,
+        enter_name,
+        enter_sex,
+        enter_birth,
+        enter_nation,
+        enter_idcard,
+        enter_phone,
+        enter_graduate,
+        enter_address,
+        enter_education,
+        enter_certificate,
+        enter_date,
+        enter_type,
+        enter_delete)
+        values(#{majorId},#{enterName},#{enterSex},#{strEnterBirth},#{enterNation},#{enterIdCard},#{enterPhone},
+        #{enterGraduate},#{enterAddress},#{enterEducation},#{enterPhoto},#{enterDate},#{enterType},1)
+    </insert>
+    <!-- 获取随机生成的 选择题 -->
+    <select id="countSelect2" resultType="selectModel">
+        select
+        select_id as selectId,
+        select_name as selectName,
+        select_a as selectA,
+        select_b as selectB,
+        select_c as selectC,
+        select_d as selectD,
+        select_answer as selectAnswer ,
+        select_point as selectPoint
+        from t_select
+        where score_type=3
+        and enter_test_type = #{enter_test_type}
+        and select_delete=1
+    </select>
+    <!-- 更新报名成绩 -->
+    <update id="saveScore2" parameterType="Map">
+        update t_enter set enter_first_score = #{total}
+        where enter_idcard = #{studentId}
+    </update>
+    <resultMap type="StudentEnterModel" id="enMap">
+        <result column="enter_idcard" property="enterIdCard" />
+    </resultMap>
+    <select id="idcard" parameterType="long" resultMap="enMap">
+        select
+        enter_idcard
+        from
+        t_enter
+        where
+        enter_idcard=#{idcard}
+    </select>
+    <!-- 更新报名成绩 -->
+    <update id="updateStuEnterModelaaa" >
+        update t_enter set enter_pay_money = #{enterPayMoney},
+        enter_pay_way=#{enterPayWay}
+        where enter_idcard = #{enterIdcard}
+    </update>
+    <select id="selectStuEnterModelaaa" parameterType="long" resultMap="enMap">
+        select
+        enter_id as enterId,
+            en.enter_name as enterName,
+            en.enter_sex as enterSex,
+            en.enter_birth as enterBirth,
+            en.enter_nation as enterNation,
+            en.enter_idcard as enterIdcard,
+            en.enter_phone as enterPhone,
+            en.enter_graduate as enterGraduate,
+            en.enter_address as enterAddress,
+            en.enter_education as enterEducation,
+            en.enter_certificate as enterCertificate,
+            en.enter_photo as enterPhoto,
+            en.enter_email as enterEmail,
+            en.enter_check_state as enterCheckState,
+            en.enter_check_date as enterCheckDate,
+            en.enter_first_score as enterFirstScore,
+            en.enter_date as enterDate,
+            en.enter_type as enterType,
+            en.enter_pay_state as enterPayState,
+            en.enter_pay_way as enterPayWay,
+            en.enter_pay_money as enterPayMoney,
+            en.enter_pay_date as enterPayDate
+
+        from t_enter en
+            where en.enter_delete=1
+            and en.enter_idcard=#{enterIdcard}
+    </select>
+    <select id="selectStuEnterModel" parameterType="long" resultMap="enMap">
+        select
+        enter_id as enterId,
+            en.enter_name as enterName,
+            en.enter_sex as enterSex,
+            en.enter_birth as enterBirth,
+            en.enter_nation as enterNation,
+            en.enter_idcard as enterIdcard,
+            en.enter_phone as enterPhone,
+            en.enter_graduate as enterGraduate,
+            en.enter_address as enterAddress,
+            en.enter_education as enterEducation,
+            en.enter_certificate as enterCertificate,
+            en.enter_photo as enterPhoto,
+            en.enter_email as enterEmail,
+            en.enter_check_state as enterCheckState,
+            en.enter_check_date as enterCheckDate,
+            en.enter_first_score as enterFirstScore,
+            en.enter_date as enterDate,
+            en.enter_type as enterType,
+            en.enter_pay_state as enterPayState,
+            en.enter_pay_way as enterPayWay,
+            en.enter_pay_money as enterPayMoney,
+            en.enter_pay_date as enterPayDate
+
+        from t_enter en
+            where en.enter_delete=1
+            and en.enter_id=#{enterId}
+    </select>
+
+</mapper>

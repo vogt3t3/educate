@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.TeacherInfoDao">
+    <resultMap type="com.education.model.TeacherModel" id="TeacherMap">
+        <result property="teacherId" column="teacher_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="teacherPwd" column="teacher_password"/>
+        <result property="teacherRealName" column="teacher_realname"/>
+        <result property="teacherBirth" column="teacher_birth"/>
+        <result property="teacherSex" column="teacher_sex"/>
+        <result property="teacherPolitical" column="teacher_political"/>
+        <result property="teacherNational" column="teacher_national"/>
+        <result property="teacherRecord" column="teacher_record"/>
+        <result property="teacherNative" column="teacher_native"/>
+        <result property="teacherSchool" column="teacher_school"/>
+        <result property="teacherDegree" column="teacher_degree"/>
+        <result property="teacherEmail" column="teacher_email"/>
+        <result property="teacherPhone" column="teacher_phone"/>
+        <result property="teacherRole" column="teacher_role"/>
+        <result property="teacherAdderss" column="teacher_address"/>
+        <result property="teacherCategory" column="teacher_category"/>
+        <result property="teacherTranning" column="teacher_training"/>
+        <result property="teacherReward" column="teacher_reward"/>
+        <result property="teacherPunish" column="teacher_punish"/>
+        <result property="teacherDetail" column="teacher_detail"/>
+        <result property="teacherPhoto" column="teacher_photo"/>
+        <result property="teacherCreateDate" column="teacher_create_date"/>
+        <result property="teacherLastLoginDate" column="teacher_last_logindate"/>
+        <result property="teacherSuntime" column="teacher_login_sumtime"/>
+        <result property="teacherModifyPerson" column="teacher_modify_person"/>
+        <result property="teacherModifyDate" column="teacher_modify_date"/>
+        <result property="teacherDelete" column="teacher_delete"/>
+        <association property="courseModel" javaType="courseModel">
+          <id property="courseId" column="course_id"/>
+		  <result property="courseName" column="course_name"/>
+		</association>  
+    </resultMap>
+    <!-- 根据学生id多表查询教师信息 -->
+    <select id="getTeacherList" parameterType="int" resultMap="TeacherMap">
+          select b.* ,c.course_name,a.student_id from t_student a, t_teacher b, t_course c,t_major d
+          where d.major_id=c.major_id and c.course_id=b.course_id and a.major_id=d.major_id and a.student_id=#{stuId}
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+#education_dao
+<div>
+    <p>
+       远程教育系统之dao层
+    </p>
+</div>
+<div>
+    <ul>
+		<li>1.该模块主要提供管理系统中与数据库进行数据交互接口</li>
+		<li>2.该系统采用Mybatis的面向接口开发</li>
+		<li>3.接口所对用的Mapper文件在mybtis文件夹下的mapper文件夹内</li>
+		<li>4.db.properties文件主要配置与数据库的连接信息</li>
+		<li>5.log4j.properties文件主要提供数据库操作的查询过程的打印，在开发过程中使用，上线时删除该文件</li>
+		</ul>
+</div>

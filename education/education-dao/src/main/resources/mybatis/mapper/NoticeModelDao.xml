@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.NoticeModelDao">
+    <resultMap type="com.education.model.NoticeModel" id="likeNotice">
+        <result property="noticeId" column="notice_id" />
+        <result property="noticeName" column="notice_name" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="noticeInfo" column="notice_inf" />
+        <result property="noticeDate" column="notice_date" />
+        <result property="noticeTarget" column="notice_target" />
+        <result property="noticeCreateDate" column="notice_create_date" />
+        <result property="noticeModifyDate" column="notice_modify_date" />
+        <result property="noticeModifyName" column="notice_modify_person" />
+        <result property="noticeDel" column="notice_delete" />
+        <result property="teacherRealName" column="teacher_realname" />
+    </resultMap>
+    
+    <select id="selectNoticeById" resultMap="likeNotice">
+        select notice.notice_id,notice.notice_name,notice.teacher_id,notice.notice_inf,notice.notice_date,notice.notice_target,notice.notice_create_date,notice.notice_modify_date,
+        notice.notice_modify_person,notice.notice_delete,teacher.teacher_realname from t_notice notice,t_teacher teacher where notice_delete = 1 and teacher.teacher_id = notice.teacher_id
+    </select>
+
+    
+</mapper>

@@ -1,0 +1,12 @@
+#education_model
+<div>
+    <p>
+       远程教育系统之model层
+    </p>
+</div>
+<div>
+    <ul>
+		<li>1.该模块主要提供数据的bean类，用来给用户进行数据接收以及数据传参</li>
+		<li>2.因为该系统采用dubbo，只要涉及到的实体bean必须实现序列化</li>
+		</ul>
+</div>

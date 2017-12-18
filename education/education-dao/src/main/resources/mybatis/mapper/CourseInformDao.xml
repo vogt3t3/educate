@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.CourseInformDao">
+    <!-- 实体类中的和数据库中的数据不一致 -->
+    <resultMap type="com.education.model.CourseInform" id="likeCourseMap">
+        <result property="informId" column="inform_id" />
+        <result property="informDate" column="inform_date" />
+        <result property="informInformTitle" column="inform_informTitle" />
+        <result property="informDelete" column="inform_delete" />
+        <result property="courseName" column="course_name" />
+        <result property="teacherRealName" column="teacher_realname" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="courseId" column="course_id" />
+    </resultMap>
+
+    <!-- 查询全部 -->
+    <select id="selectInformById" resultMap="likeCourseMap">
+        select teacher.teacher_id,course.course_id,course_inform.inform_id,course_inform.inform_date,course_inform.inform_informTitle,teacher.teacher_realname,course.course_name,course_inform.inform_date,course_inform.inform_delete
+        from t_course_inform course_inform,t_teacher teacher,t_course course
+        <where>
+            <if test="true">
+                and course_inform.inform_delete = 1 
+                and course_inform.teacher_id = teacher.teacher_id 
+                and course.course_id=course_inform.course_id 
+            </if>
+            <if test="informId!=null" >
+                and course_inform.inform_id = #{informId}
+            </if>
+            <if test="courseName!=null and courseName!=''">
+                and course.course_name like concat('%',#{courseName},'%')
+            </if>
+        </where>
+    </select>
+
+   
+    <!-- 修改 -->
+    <update id="updateCourseById" parameterType="CourseInform">
+   update t_course_inform set
+        
+        
+        t_course_inform.inform_date = #{informDate},
+        t_course_inform.inform_informTitle = #{informInformTitle}
+
+    where inform_id = #{informId} 
+    </update>
+    
+    <!-- 增加,查询courseId寻找courseName -->
+    <select id="selectCourseById" resultMap="likeCourseMap" parameterType="CourseInform">
+    select course_name,course_id from t_course where course_name = #{courseName};
+    </select>
+    
+    <!-- 增加,查询teacherID寻找teacherName -->
+    <select id="selectTeacherById" resultMap="likeCourseMap" parameterType="int">
+    select teacher_realname,teacher_id from t_teacher where teacher_id = #{teacherId};
+    </select>
+
+    <!-- 增加 -->
+    <insert id="addCourseById" parameterType="CourseInform">
+    insert into t_course_inform (inform_date,inform_informTitle,inform_delete,teacher_id,course_id)
+    values(#{informDate},#{informInformTitle},1,#{teacherId},#{courseId});
+    </insert>
+    
+    <insert id="addCourseByName" parameterType="CourseInform" useGeneratedKeys="true" keyProperty="courseId">
+    insert into t_course (course_name) values (#{courseName});
+    </insert>
+
+    <!-- 删除 -->
+    <update id="deleteCourseById" parameterType="int">
+        update t_course_inform set inform_delete = 0 where inform_id = #{informId};
+    </update>
+</mapper>

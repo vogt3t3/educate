@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.SectionPartDao">
+    <!-- 查询章节信息实体 杨振欣 -->
+    <resultMap type="sectionTree" id="selectSection">
+        <id column="section_id" property="id" />
+        <result column="section_name" property="label" />
+        <result column="course_name" property="courseName"/>
+        <collection property="children" ofType="sectionTree">
+            <id column="part_id" property="id" />
+            <result column="part_name" property="label" />
+            <result column="video_id" property="videoId"/>
+        </collection>
+    </resultMap>
+    <!-- 查询所有章节信息，包含所有的小节信息 -->
+    <select id="listAllSection" parameterType="int" resultMap="selectSection">
+        select
+	        s.section_id,s.course_id,c.course_name,s.section_name,
+	        p.part_id,p.part_name,p.video_id
+	    from t_section s inner join t_course c on s.course_id=c.course_id
+	        right join t_part_section p on s.section_id=p.section_id
+        where
+        	c.teacher_id=#{id} and s.section_delete=1 and p.part_delete=1
+    </select>
+    <!-- 根据教师的编号查询出教师的姓名 -->
+    <select id="getTeacherNameById" parameterType="int" resultType="String">
+    	select teacher_realname from t_teacher where teacher_id=#{teacherId}
+    </select>
+    <!-- 查询出所有没有视频的章节 -->
+    <resultMap type="sectionTree" id="selectSectionNoVedio">
+        <id column="section_id" property="id" />
+        <result column="section_name" property="label" />
+        <result column="course_name" property="courseName"/>
+        <collection property="children" ofType="sectionTree">
+            <id column="part_id" property="id" />
+            <result column="part_name" property="label" />
+            <result column="video_id" property="videoId"/>
+        </collection>
+    </resultMap>
+    <select id="listSectionNoVideo" parameterType="int" resultMap="selectSectionNoVedio">
+    	select
+	        s.section_id,s.course_id,c.course_name,s.section_name,
+	        p.part_id,p.part_name
+	        from t_section s inner join t_course c on s.course_id=c.course_id
+	        right join t_part_section p on s.section_id=p.section_id
+        where
+        	c.teacher_id=#{id} and s.section_delete=1 and p.part_delete=1
+        	and p.video_id=0
+    </select>
+    <!-- 查询到所有没有小节的章节 -->
+    <select id="listSectionNoSecond" parameterType="int" resultMap="selectSection">
+        select
+        s.section_id,s.course_id,c.course_name,s.section_name
+        from t_section s inner join t_course c on s.course_id=c.course_id
+        where
+        c.teacher_id=#{id} and s.section_delete=1
+    </select>
+    <!-- 根据教师的编号查询该教师所教的课程的名称 -->
+    <select id="queryClassName" parameterType="int" resultType="String">
+    	select course_name from t_course co join t_teacher te
+    	on te.course_id=co.course_id where te.teacher_id=#{teacherId}
+    </select>
+    <!-- 根据教师的编号查询该教师所教的课程的mingcheng -->
+    <select id="queryClassId" parameterType="int" resultType="int">
+    	select course_id from t_teacher where teacher_id =#{teacherId}
+    </select>
+    <!-- 根据传递过来的信息添加大的章节信息 -->
+    <insert id="addSection" parameterType="section" useGeneratedKeys="true" keyProperty="sectionId">
+    	insert into t_section values(
+    		null,null,null,#{course_id},#{teacherId},#{sectionName},
+    		#{sectionAddTime},#{seModifyPerson},#{sectionModifyDate},1
+    	)
+    </insert>
+    <!-- 根据传递过来的信息添加小章节 -->
+    <insert id="addSmallSection" parameterType="secondSection">
+    	insert into t_part_section values(
+    		null,null,#{section_id},#{part_id_name},#{part_name},
+    		#{part_frequence},#{part_addtime},#{part_modify_person},
+    		#{part_modify_date},1
+    	)
+    </insert>
+    <!-- 根据传递过来的信息修改大章节的信息 -->
+    <update id="modifySection" parameterType="section">
+    	update t_section set section_name=#{sectionName},
+    	section_modify_person=#{seModifyPerson},
+    	section_modify_date=#{sectionModifyDate}
+    	where section_id=#{sectionId}
+    </update>
+    <!-- 根据传递过来的信息修改小章节的信息 -->
+    <update id="modifySecondSection" parameterType="secondSection">
+    	update t_part_section set part_name=#{part_name},
+    	part_frequence=#{part_frequence},
+    	part_modify_person=#{part_modify_person},
+    	part_modify_date=#{part_modify_date}
+    	where part_id=#{part_id}
+    </update>
+    <!-- 根据小节的编号查询访问的次数 -->
+    <select id="getFrequence" parameterType="int" resultType="int">
+    	select part_frequence from t_part_section where part_id=#{part_id}
+    </select>
+    <!-- 根据章节的编号删除章节 -->
+    <update id="deleteSection" parameterType="section">
+    	update t_section set section_delete=0,
+    	section_modify_person=#{seModifyPerson},
+    	section_modify_date=#{sectionModifyDate}
+    	where section_id=#{sectionId}
+    </update>
+    <!-- 在删除大的章节的时候删除章节中的小节 -->
+    <update id="deleteSecondSectionBySection" parameterType="section">
+    	update t_part_section 
+    	set part_delete=0,
+    	part_modify_person=#{seModifyPerson},
+    	part_modify_date=#{sectionModifyDate}
+    	where section_id=#{sectionId}
+    </update>
+    <!-- 单独删除小的章节 -->
+    <update id="deleteSecondSection" parameterType="secondSection">
+    	update t_part_section 
+    	set part_delete=0,
+    	part_modify_person=#{part_modify_person},
+    	part_modify_date=#{part_modify_date}
+    	where part_id=#{part_id}
+    </update>
+    <!-- 向小节中添加小节的视频 -->
+    <update id="addVideo" parameterType="secondSection">
+    	update t_part_section
+    	set video_id=#{video_id},
+    	part_modify_person=#{part_modify_person},
+    	part_modify_date=#{part_modify_date}
+    	where part_id=#{part_id}
+    </update>
+    <!-- 向视频表中添加视频信息,其编号自动获取 -->
+    <insert id="addVideoToVideoTable" parameterType="videoModel" useGeneratedKeys="true" keyProperty="videoId">
+    	insert into t_video values(
+    		null,#{partId},#{videoName},
+    		#{videoPath},#{videoAddUser},
+    		#{addTime},1
+    	)
+    </insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.ScoreDao">
+    <resultMap type="com.education.model.StudentScoreModel" id="scoreMap">
+        <result property="studentId" column="student_id"/>
+        <result property="scoreId" column="score_id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="courseName" column="course_name"/>
+        <result property="scorePlay" column="score_play"/>
+        <result property="scoreOntime" column="score_ontime"/>
+        <result property="scoreTest" column="score_test"/>
+        <result property="scoreExam" column="score_exam"/>
+        <result property="modifyPerson" column="modify_person"/>
+        <result property="modifyDate" column="modify_date"/>
+        <result property="score" column="score"/>
+    </resultMap>
+    <!-- 查询全部学生的成绩信息 -->
+    <select id="stuScoreList"  resultMap="scoreMap">
+         select s.score_id,t.student_id,t.student_name,c.course_name,s.score_play,s.score_ontime,s.score_test,s.score_exam,s.score_play * 0.1+s.score_ontime * 0.2+s.score_test * 0.3+s.score_exam * 0.4  as score 
+         from t_score s,t_course c,t_student t 
+          <where>
+            <if test="true">
+                and s.course_id=c.course_id and s.student_id=t.student_id
+            </if>
+            <if test="studentName!=null and studentName!=''">
+                and t.student_name like concat('%',#{studentName},'%')
+            </if>
+            <if test="studentId!=null">
+                and t.student_id=#{studentId}
+            </if>
+         </where>
+    </select>
+    <!-- 查询单个学生的详细成绩信息 -->
+    <select id="getStuScore"  resultMap="scoreMap">
+        select t.student_id,s.score_id,t.student_name,c.course_name,s.score_play,s.score_ontime,s.score_test,s.score_exam,s.score_play * 0.1+s.score_ontime * 0.2+s.score_test * 0.3+s.score_exam * 0.4  as score 
+        from t_score s,t_course c,t_student t where s.course_id=c.course_id and s.student_id=t.student_id and s.score_id=#{scoreId}
+    </select>
+    <!-- 修改学生成绩信息 -->
+    <update id="updateScore" parameterType="studentScoreModel">
+    UPDATE t_score SET score_ontime =#{scoreOntime},score_test=#{scoreTest},score_exam=#{scoreExam},score_play=#{scorePlay},modify_person=#{modifyPerson},modify_date=#{modifyDate} WHERE  score_id =#{scoreId}
+    </update>
+    <!-- 根据课程名称查询id -->
+    <select id="getcourseId" parameterType="String" resultType="int">
+        select course_id 
+        from t_course  where course_name like concat('%',#{courseName},'%')
+    </select>
+    <!-- 根据学生名称查询id -->
+    <select id="getstuId" parameterType="String" resultType="int">
+        select student_id 
+        from t_student  where student_name like concat('%',#{studentName},'%')
+    </select>
+    <!-- 增加学生成绩信息 -->
+    <insert id="addScore" parameterType="studentScoreModel">
+    INSERT INTO t_score (course_id, student_id, score_play, score_ontime, score_test, score_exam, score_credit, score_create_date, modify_person, modify_date, score_delete) VALUES (#{courseId}, #{studentId},#{scorePlay}, #{scoreOntime},#{scoreTest}, #{scoreExam}, #{scoreCredit}, #{scoreCreateDate}, #{modifyPerson}, #{modifyDate}, #{scoreDelete});
+    </insert>  
+</mapper>

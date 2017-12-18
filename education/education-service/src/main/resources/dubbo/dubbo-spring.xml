@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- 配置唯一标示 -->
+	<dubbo:application name="DubboServer" />
+	<!-- 配置为直连的方式 zookeeper配置为：zookeeper的IP加端口号 -->
+	<!-- <dubbo:registry address="N/A"></dubbo:registry> -->
+	<!-- 改为自身所需IP -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181"></dubbo:registry>
+	<!-- 配置端口号 -->
+	<dubbo:protocol name="dubbo" port="8088"></dubbo:protocol>
+	<!-- 配置实现类 发布所有的服务层接口，下面为示例 -->
+	<bean id="queryExamPageImpl" class="com.education.service.impl.QueryExamPageImpl"></bean>
+	<bean id="mvideoQuizServiceImpl" class="com.education.service.impl.MvideoQuizServiceImpl"></bean>
+	<!-- 赵润 发布学生成绩 -->
+	<bean id="studentScoreServiceImpl" class="com.education.service.impl.StudentScoreServiceImpl"></bean>
+	<!-- 张恒：发布教师服务 -->
+	<bean id="teacherServiceImpl" class="com.education.service.impl.TeacherServiceImpl"></bean>
+	<!-- 杨振欣：查询章节信息的接口实现 -->
+	<bean id="iSectionServiceImpl" class="com.education.service.impl.ISectionServiceImpl"></bean>
+	<!-- 周长磊：发布学费管理服务 -->
+	<bean id="stucostServiceImpl" class="com.education.service.impl.StucostServiceImpl"></bean>
+	<!-- 申忠正 导学资源服务接口 -->
+	<bean id="StudyResServiceImpl" class="com.education.service.impl.StudyResServiceImpl"></bean>
+	<!-- 申忠正 课件资源服务接口 -->
+	<bean id="CoursewareImpl" class="com.education.service.impl.CoursewareImpl"></bean>
+	<!-- 冯云威 教师信息查看 -->
+	<bean class="com.education.service.impl.TeacherInfoServiceImpl"
+		id="teacherInfoServiceImpl" />
+	<!--冯云威 教师评价 -->
+	<bean class="com.education.service.impl.TeacherEvaluationServiceImpl"
+		id="teacherEvaluationServiceImpl" />
+	<!-- 冯云威 成绩管理 -->
+	<bean class="com.education.service.impl.ScoreServiceImpl" id="scoreServiceImpl" />
+	<!-- 李志鹏 招生计划服务接口实现 -->
+	<bean id="enrollServiceImpl" class="com.education.service.impl.EnrollServiceImpl"></bean>
+	<!-- 李志鹏 题库判断题服务接口实现 -->
+	<bean id="CourseSectionService" class="com.education.service.impl.CourseSectionService"></bean>
+	<!-- 李志鹏 题库选择题服务接口实现 -->
+	<bean id="SelectExamService" class="com.education.service.impl.SelectExamService"></bean>
+	<!-- 申忠正 报名接口 -->
+	<bean id="EnterServiceImpl" class="com.education.service.impl.EnterServiceImpl"></bean>
+	<!-- 刘帅:学生主页 -->
+	<bean id="stuIndexServiceImpl" class="com.education.service.impl.StuIndexServiceImpl"></bean>
+	<!-- 刘帅:课程评价 -->
+	<bean id="evaluateServiceImpl" class="com.education.service.impl.EvaluateServiceImpl"></bean>
+	<!-- 刘帅:学习课程 -->
+	<bean id="stuCourseServiceImpl" class="com.education.service.impl.StuCourseServiceImpl"></bean>
+	<!-- 刘帅:所有小节 -->
+	<bean id="partSectionServiceImpl" class="com.education.service.impl.PartSectionServiceImpl"></bean>
+	<!-- 刘帅:该小节的课程详细信息 -->
+	<bean id="courseInfoServiceImpl" class="com.education.service.impl.CourseInfoServiceImpl"></bean>
+	<!-- 刘帅:论文管理 -->
+	<bean id="thesisServiceImpl" class="com.education.service.impl.ThesisServiceImpl"></bean>
+	<!-- 刘帅:论文规范 -->
+	<bean id="thesisLayServiceImpl" class="com.education.service.impl.ThesisLayServiceImpl"></bean>
+	<!-- 刘帅:播放视频 -->
+	<bean id="playVideoServiceImpl" class="com.education.service.impl.PlayVideoServiceImpl"></bean>
+	<!-- 赵睿慷系统公告接口 -->
+	<bean id="IStudyResourceApiImpl" class="com.education.service.impl.IStudyResourceApiImpl"></bean>
+	<!-- 赵睿慷导学资源接口 -->
+	<bean id="INoticeServiceApiImpl" class="com.education.service.impl.INoticeServiceApiImpl"></bean>
+	<!-- 李梦鸽：发布教师服务 -->
+	<bean id="studentManagerServiceImpl" class="com.education.service.impl.StudentManagerServiceImpl"></bean>
+	<!-- 李梦鸽：发布学生缴费信息接口 -->
+	<bean id="StuMoneyServiceImpl" class="com.education.service.impl.StuMoneyServiceImpl"></bean>
+	<!-- 杨振欣 ：查询权限信息的接口实现 -->
+	<bean id="permissionServiceImpl" class="com.education.service.impl.PermissionServiceImpl"></bean>
+	<!-- 杨振欣，教师登陆实现类发布 -->
+	<bean id="teacherLoginImpl" class="com.education.service.impl.TeacherLoginImpl"></bean>
+	<!-- 赵京华，学生章节测试实现类发布 -->
+	<bean id="sectionTestImpl" class="com.education.service.impl.SectionTestImpl"></bean>
+	<!-- 杨振欣:角色管理实现类 -->
+	<bean id="roleServiceImpl" class="com.education.service.impl.RoleServiceImpl"></bean>
+	<!-- 杨振欣:学生登录实现类 -->
+	<bean id="studentLoginServiceImpl" class="com.education.service.impl.StudentLoginServiceImpl"></bean>
+	<!-- 张露林：报名审核管理服务接口 -->
+	<bean id="admissionsReviewimpl" class="com.education.service.impl.AdmissionsReviewimpl"></bean>
+	<!-- 张露林：教师管理首页服务接口 -->
+	<bean id="teacherAnnouncementimpl" class="com.education.service.impl.TeacherAnnouncementimpl"></bean>
+	<!-- 赵睿慷课程管理接口 -->
+	<bean id="ICoursesServiceApiImpl" class="com.education.service.impl.ICoursesServiceApiImpl"></bean>
+	<!-- 赵睿慷课程通知接口 -->
+	<bean id="ICourseServiceApiImpl" class="com.education.service.impl.ICourseServiceApiImpl"></bean>
+	<!-- 申忠正 学生考试服务接口 -->
+	<bean id="StudentExamImpl" class="com.education.service.impl.StudentExamImpl"></bean>
+	<!-- 张建磊： 发布公告管理服务 -->
+	<bean id="noticeServiceImpl" class="com.education.service.impl.NoticeServiceImpl"></bean>
+	<!-- 用户服务层实现类 赵睿慷 -->
+	<bean id="majorServiceApiImpl" class="com.education.service.impl.MajorServiceApiImpl"></bean>
+	<!-- 辛亚会 异动管理 -->
+	<bean id="changeServiceImpl" class="com.education.service.impl.ChangeServiceImpl"></bean>
+	<!-- 徐鹏超：教学计划 -->
+	<bean id="edServiceImp" class="com.education.service.impl.EdServiceImp"></bean>
+	<!-- 徐鹏超： 教学计划 -->
+	<bean id="educationServiceImp" class="com.education.service.impl.EducationServiceImp"></bean>
+	<!-- 周长磊：发布学学生端论文服务 -->
+	<bean id="stuthesisServiceImpl" class="com.education.service.impl.StuthesisServiceImpl">
+	</bean>
+	<!-- 注解驱动 -->
+	<dubbo:annotation />
+</beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.TeacherEvaluationDao">
+     <resultMap type="com.education.model.TeaEvaluationModel" id="TeaEvaluationMap">
+          <result property="studentId" column="student_id"/>
+          <result property="teacherId" column="teacher_id"/>
+          <result property="teaEvaContent" column="teacher_evaluate_content"/>
+          <result property="teaEvaDel" column="teacher_evaluate_delete"/>
+          <result property="courseName" column="course_name"/>
+          <result property="teaEvaDate" column="teacher_evaluate_date"/>
+          <result property="teacherRealName" column="teacher_realname"/>
+    </resultMap>
+    <!-- 根据教师id和学生id查询教评价 -->
+    <select id="queryTeaEvaluationList" parameterType="int" resultMap="TeaEvaluationMap">
+         select c.course_name,t.teacher_realname,e.teacher_evaluate_date,e.teacher_evaluate_content from t_teacher_evaluate e,t_teacher t,t_course c 
+         where  e.teacher_id=c.teacher_id and e.teacher_id=t.teacher_id and t.teacher_id =c.teacher_id and e.student_id=#{stuId} and e.teacher_id=#{teaId} 
+    </select>
+    <!-- 添加教师评价 -->
+    <insert id="addTeaEvaluation" parameterType="teaEvaluationModel">
+        INSERT INTO t_teacher_evaluate (student_id, teacher_id, teacher_evaluate_content,teacher_evaluate_date,teacher_evaluate_delete) 
+        VALUES (#{studentId},#{teacherId},#{teaEvaContent},#{teaEvaDate},#{teaEvaDel})
+    </insert>
+</mapper>

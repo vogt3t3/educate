@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.education.dao.ChangeDao">
+
+	<!-- 教师端查询所有学生的异动（分页查询 + 模糊查询） -->
+	<select id="queryChangeAll" resultType="transactionModel">
+		select s.student_id as studentId,
+		s.student_name as studentName,
+		s.student_sex as studentSex,
+		t.transaction_id as transactionId,
+		t.transaction_reason_text as transactionText,
+		t.transaction_start_date
+		as transactionStartStr,
+		t.transaction_current_state as
+		transactionCurrState,
+		t.transaction_response_state as
+		transactionResState
+		from t_transaction t,t_student s
+		where
+		t.transaction_delete=1
+		and t.student_id=s.student_id
+
+		<!-- 判断studentId是否为0 -->
+		<if test="studentId != 0 and studentId != null">
+			and s.student_id = #{studentId}
+		</if>
+		<!-- 判断studentName是否为空 -->
+		<if test="studentName != null and studentName !=''">
+			and s.student_name like CONCAT('%',#{studentName},'%')
+		</if>
+	</select>
+
+	<!--学生端根据学号查询该生所有异动 -->
+	<select id="queryTranById" resultType="transactionModel">
+		select
+		t.student_id as
+		studentId,
+		t.transaction_reason_request as
+		transactionRequest,
+		s.student_name as studentName,
+		t.transaction_apply_date as
+		transactionApplyDateStr,
+		t.transaction_current_state as
+		transactionCurrState,
+		t.transaction_start_date as transactionStartStr
+		from t_transaction
+		t,t_student s
+		where s.student_id=t.student_id
+		and
+		t.transaction_delete=1
+		and s.student_id=#{studentId}
+	</select>
+	
+	<!-- 教师端删除异动 -->
+	<update id="deleteChange">
+		update t_transaction set transaction_delete=0 where
+		transaction_delete=1 and
+		transaction_id=#{transactionId}
+	</update>
+	
+	<!--教师端修改异动 -->
+	<update id="updateChange">
+		update 	t_transaction 
+		set 	transaction_current_state=#{transactionCurrState},
+				transaction_response_state=#{transactionResState}
+		where 	transaction_id=#{transactionId}
+	</update>
+	
+	<!-- 学生端增加异动 -->
+	<insert id="addChange" parameterType="transactionModel">
+		insert 	into t_transaction(
+				student_id,
+				transaction_reason_request,
+				transaction_reason_text,
+				transaction_apply_date,
+				transaction_how_long,
+				transaction_current_state,
+				transaction_delete
+		)
+		values(	#{studentId},
+				#{transactionRequest},
+				#{transactionText},
+				#{transactionApplyDate},
+				#{transactionLong},
+				'待审核',1)
+	</insert>
+	
+</mapper>

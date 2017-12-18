@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.MajorDao">
+    <!-- 实体类中的和数据库中的数据不一致 -->
+    <resultMap type="com.education.model.MajorModel" id="likeMajorMap">
+        <result property="majorId" column="major_id" />
+        <result property="majorName" column="major_name" />
+        <result property="majorAcademic" column="major_academic" />
+        <result property="majorDate" column="major_create_date" />
+        <result property="majorProfile" column="major_profile" />
+        <result property="majorCredit" column="major_total_credit" />
+        <result property="majorPerson" column="modify_person" />
+        <result property="modifyDate" column="modify_date" />
+        <result property="majorDelete" column="major_delete" />
+    </resultMap>
+
+    <!-- 查询全部 -->
+    <select id="selectMajorByMajorid" resultMap="likeMajorMap">
+        select major_id,major_name,major_academic,
+        major_create_date,major_profile,major_total_credit,
+        modify_person,modify_date from t_major 
+        <where>
+            <if test="true">
+                and major_delete = 1 
+            </if>
+            <if test="majorId!=null" >
+                and major_id = #{majorId}
+            </if>
+            <if test="majorName!=null and majorName!=''">
+                and major_name like concat('%',#{majorName},'%')
+            </if>
+        </where>
+    </select>
+    
+    <!-- 通过ID进行精确查询 -->
+    <select id="getById" resultMap="likeMajorMap">
+        select major_id,major_name,major_academic,
+        major_create_date,major_profile,major_total_credit,
+        modify_person,modify_date from t_major where major_id=#{majorId} and major_delete = 1
+    </select>
+    
+    <!-- 通过专业名称模糊查询 -->
+    <select id="getLikeName" resultMap="likeMajorMap">
+        select major_name,major_academic,
+        major_create_date,major_profile,major_total_credit,
+        modify_person,modify_date from t_major where major_name like #{majorId} and major_delete = 1
+    </select>
+    
+    <!-- 修改 -->
+    <update id="updateMajorByMajorid" parameterType="MajorModel">
+        update t_major set
+
+        major_name = #{majorName},
+        major_academic=#{majorAcademic},
+        major_profile = #{majorProfile},
+        major_total_credit=#{majorCredit},
+        modify_date = Now(),
+        modify_person = '赵睿慷'
+
+        where major_id = #{majorId}
+    </update>
+    
+    <!-- 增加 -->
+    <insert id="addMajorByMajorid" parameterType="MajorModel">
+        insert into t_major (
+        major_name,
+        major_academic,
+        major_create_date,
+        major_profile,
+        major_total_credit,
+        major_delete
+        ) 
+        values(
+
+        #{majorName},
+        #{majorAcademic},
+        Now(),
+        #{majorProfile},
+        #{majorCredit},
+        1
+
+        )
+    </insert>
+    
+    <!-- 删除 -->
+    <update id="deleteMajorById" parameterType="int">
+        update t_major set major_delete = 0 where major_id = #{major_id}
+    </update>
+</mapper>

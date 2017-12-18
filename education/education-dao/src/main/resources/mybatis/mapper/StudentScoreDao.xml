@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StudentScoreDao">
+
+
+	<resultMap type="StudentScoreModel" id="score2">
+		<result property="scorePlay" column="score_play" />
+		<result property="scoreOntime" column="score_ontime" />
+		<result property="scoreTest" column="score_test" />
+		<result property="scoreExam" column="score_exam" />
+		<result property="scoreCredit" column="score_credit" />
+		<result property="scoreCreateDate" column="score_create_date" />
+		<result property="modifyPerson" column="modify_person" />
+		<result property="modifyDate" column="modify_date" />
+		<result property="courseName" column="course_name" />
+	</resultMap>
+	<resultMap type="StudentScoreModel" id="score3">
+	   <result property="courseId" column="course_id" />
+		<result property="scoreExam" column="score_exam" />
+		<result property="examAddtime" column="exam_addtime" />
+		<result property="examDelete" column="exam_delete" />
+		<result property="courseName" column="course_name" />
+	</resultMap>
+	<!-- 学生各科成绩列表 -->
+	<select id="listStudentScore" resultMap="score3">
+		 select
+        c.score_exam,c.course_id,c.course_name,d.exam_addtime,d.exam_delete from
+        (select a.score_exam,b.course_id,b.course_name,b.exam_id from t_score a,t_course b where
+        a.course_id=b.course_id and a.student_id=#{stuId}) c,t_exam d where
+        c.exam_id=d.exam_id and d.exam_delete=1 and d.exam_delete=1
+	</select>
+    <!-- 课程分数组成 -->
+    <select id="scoreGroup" resultMap="score2">
+           select a.score_play,a.score_ontime,a.score_test,a.score_exam from t_score a inner join t_course b on a.course_id=b.course_id and a.student_id=#{stuId} 
+           and b.course_id=#{courseId}
+    </select>
+    
+<!-- 添加成绩异议 -->
+<insert id="addDissent">
+ insert into t_dissent (dissent_id,course_id,student_id,dissent_content,dissent_date,dissent_check,dissent_delete) values(null,#{stuId},#{courseId},#{content},#{date},0,1);
+</insert>
+
+</mapper>

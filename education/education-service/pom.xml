@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.net.education</groupId>
+        <artifactId>education</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>education-service</artifactId>
+    <dependencies>
+        <!-- 依赖Model层 -->
+        <dependency>
+            <groupId>com.net.education</groupId>
+            <artifactId>education-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- 依赖api层 -->
+        <dependency>
+            <groupId>com.net.education</groupId>
+            <artifactId>education-serviceapi</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- 依赖Dao层 -->
+        <dependency>
+            <groupId>com.net.education</groupId>
+            <artifactId>education-dao</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- 依赖util层 -->
+        <dependency>
+            <groupId>com.net.education</groupId>
+            <artifactId>education-util</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+         <!-- Spring事务包 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring-version}</version>
+        </dependency>
+        <!-- 添加spring-jdbc包 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring-version}</version>
+        </dependency>
+        <!-- 文件上传下载依赖包 -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <!-- 分页组件 pagehelper核心包 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <!-- 项目打包 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <!-- 生成linux, Windows两种平台的执行脚本 -->
+                    <platforms>
+                        <platform>windows</platform>
+                        <platform>unix</platform>
+                    </platforms>
+                    <!-- 根目录 -->
+                    <assembleDirectory>${project.build.directory}/education</assembleDirectory>
+                    <!-- 打包的jar，以及maven依赖的jar放到这个目录里面 -->
+                    <repositoryName>lib</repositoryName>
+                    <!-- 可执行脚本的目录 -->
+                    <binFolder>bin</binFolder>
+                    <!-- 配置文件的目标目录 -->
+                    <configurationDirectory>conf</configurationDirectory>
+                    <!-- 拷贝配置文件到上面的目录中 -->
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <!-- 从哪里拷贝配置文件 (默认src/main/config) -->
+                    <configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+
+                    <!-- lib目录中jar的存放规则，默认是${groupId}/${artifactId}的目录格式，flat表示直接把jar放到lib目录 -->
+                    <repositoryLayout>flat</repositoryLayout>
+                    <encoding>UTF-8</encoding>
+                    <logsDirectory>logs</logsDirectory>
+                    <tempDirectory>tmp</tempDirectory>
+                    <programs>
+                        <program>
+                            <id>education</id>
+                            <!-- 启动类 -->
+                            <mainClass>com.education.dubbo.DubboStart</mainClass>
+                            <jvmSettings>
+                                <extraArguments>
+                                    <extraArgument>-server</extraArgument>
+                                    <extraArgument>-Xmx2G</extraArgument>
+                                    <extraArgument>-Xms2G</extraArgument>
+                                </extraArguments>
+                            </jvmSettings>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>

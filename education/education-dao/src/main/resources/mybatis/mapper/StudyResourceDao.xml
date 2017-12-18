@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StudyResourceDao">
+    <!-- 导学资源 查询所有记录到页面 申忠正 -->
+    <select id="selectStudyResource" parameterType="ResourceTCModel" resultType="ResourceTCModel">
+        select
+        resource_id as resourceId,
+        teacher_id as teacheId, 
+        course_id as courseId,
+        resource_name as resourceName,
+        resource_title as resourceTitle,
+        resource_describe as resourceDescribe,
+        resource_frequence as
+        resourceFrequence,
+        resource_delete as resourceDelete
+        from
+        t_study_resource
+        where resource_delete = 1
+        <if test="resourceId!=0">
+            and resource_id = #{resourceId}
+        </if>
+    </select>
+
+    <!-- 添加一条导学资源记录 申忠正 -->
+    <insert id="addStudyResource" parameterType="ResourceTCModel">
+        insert into
+
+        t_study_resource(teacher_id,course_id,resource_name,resource_title,resource_describe,resource_frequence,resource_delete)
+
+        values(#{teacherId},#{courseId},#{resourceName},#{resourceTitle},#{resourceDescribe},0,1)
+    </insert>
+    
+    <!-- 删除一条记录 实则更新操作  申忠正-->
+    <update id="deleteResource" parameterType="int">
+        update t_study_resource set resource_delete = 0 where resource_id = #{resourceId}
+    </update>
+    <!-- 更新操作第一步： 根据id查询对象 -->
+    <select id="queryResById" parameterType="int" resultType="ResourceTCModel">
+        select
+              resource_id as resourceId,
+              teacher_id as teacherId, 
+              course_id as courseId,
+              resource_name as resourceName,
+              resource_title as resourceTitle,
+              resource_describe as resourceDescribe,
+              resource_frequence as
+              resourceFrequence,
+              resource_delete as resourceDelete
+        from  t_study_resource
+        where resource_delete = 1 
+        and   resource_id = #{resourceId}
+    </select>
+    <!-- 更新操作第二步 ：更新教学资源  访问次数暂设不可更改-->
+    <update id="updateResource" parameterType="StudyResourceModel">
+        update t_study_resource
+        set 
+        resource_name = #{resourceName},
+        resource_title = #{resourceTitle},
+        resource_describe = #{resourceDescribe} 
+        where resource_id = #{resourceId}
+    </update>
+</mapper>

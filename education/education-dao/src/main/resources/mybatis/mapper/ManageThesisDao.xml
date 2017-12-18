@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.ManageThesisDao">
+    
+    <!-- 查询所有论文 -->
+    <select id="getThesis" resultType="thesisDo">
+       
+       select thesis.thesis_id as thesisId,thesis.thesis_title as thesisTitle,thesis.thesis_address as thesisAddress,thesis.thesis_date as thesisDate,thesis.thesis_state as thesisState,thesis.thesis_score as thesisScore,
+student.student_id as studentId,student.student_name as studentName from 
+       t_thesis as thesis left join t_student as student 
+       on thesis.student_id = student.student_id and thesis.thesis_id = student.thesis_id 
+    </select>
+    
+    <update id="addScore">
+        update t_thesis set thesis_score = #{thesisScore},thesis_state =1 where thesis_id =#{thesisId}
+    </update>
+
+</mapper>

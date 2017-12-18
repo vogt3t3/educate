@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- 杨振欣 用户登录 -->
+	<dubbo:service interface="com.education.service.ITeacherLoginService"
+		ref="teacherLoginImpl"></dubbo:service>
+	<!-- 申忠正导学资源 -->
+	<dubbo:service interface="com.education.service.IStudyResService"
+		ref="StudyResServiceImpl"></dubbo:service>
+	<!-- 申忠正报名 -->
+	<dubbo:service interface="com.education.service.IEnterService"
+		ref="EnterServiceImpl"></dubbo:service>
+	<!-- 申忠正课件资源 -->
+	<dubbo:service interface="com.education.service.ICoursewareService"
+		ref="CoursewareImpl"></dubbo:service>
+	<!-- 申忠正学生端考试资源 -->
+	<dubbo:service interface="com.education.service.IStudentExam"
+		ref="StudentExamImpl"></dubbo:service>
+	<!-- 杨振欣-配置章节查询的数据 -->
+	<dubbo:service interface="com.education.service.ISectionService"
+		ref="iSectionServiceImpl"></dubbo:service>
+	<!-- 赵润 学生成绩 -->
+	<dubbo:service interface="com.education.service.IStudentScoreService"
+		ref="studentScoreServiceImpl"></dubbo:service>
+	<!-- 杨振欣，查询权限信息的接口发布 -->
+	<dubbo:service interface="com.education.service.IPermissionService"
+		ref="permissionServiceImpl"></dubbo:service>
+	<!-- 赵润 试卷服务 -->
+	<!-- <dubbo:service interface="com.education.service.ITopicService" ref="topicServiceImpl"></dubbo:service> -->
+	<!-- 李梦鸽：teacherServiceImpl教师服务实现发布 -->
+	<dubbo:service interface="com.education.service.IStudentManagerService"
+		ref="studentManagerServiceImpl"></dubbo:service>
+	<!-- 李梦鸽：StuMoneyServiceImpl学生端服务实现发布 -->
+	<dubbo:service interface="com.education.service.IStuMoneyService"
+		ref="StuMoneyServiceImpl"></dubbo:service>
+	<!-- 赵京华：SectionTestImpl章节测试服务实现发布 -->
+	<dubbo:service interface="com.education.service.ISectionTest"
+		ref="sectionTestImpl"></dubbo:service>
+	<!-- 张恒：teacherServiceImpl教师服务实现发布 -->
+	<dubbo:service interface="com.education.service.ITeacherService"
+		ref="teacherServiceImpl"></dubbo:service>
+	<!-- 冯云威 教师信息 -->
+	<dubbo:service ref="teacherInfoServiceImpl"
+		interface="com.education.service.TeacherInfoService" />
+	<!-- 冯云威 成绩管理 -->
+	<dubbo:service ref="scoreServiceImpl" interface="com.education.service.ScoreService" />
+	<!-- 周长磊 学费管理 -->
+	<dubbo:service interface="com.education.service.IStucostSercive"
+		ref="stucostServiceImpl"></dubbo:service>
+	<!-- 赵睿慷课程管理接口 -->
+	<dubbo:service interface="com.education.service.ICoursesServiceApi"
+		ref="ICoursesServiceApiImpl">
+	</dubbo:service>
+	<!-- 赵睿慷课程通知 -->
+	<dubbo:service interface="com.education.service.ICourseServiceApi"
+		ref="ICourseServiceApiImpl"></dubbo:service>
+	<!-- 刘帅:学生主页StuIndexServiceImpl -->
+	<dubbo:service interface="com.education.service.IStuIndexService"
+		ref="stuIndexServiceImpl"></dubbo:service>
+	<!-- 刘帅:课程评价EvaluateServiceImpl -->
+	<dubbo:service interface="com.education.service.IEvaluateService"
+		ref="evaluateServiceImpl"></dubbo:service>
+	<!-- 刘帅:学习课程StuCourseServiceImpl -->
+	<dubbo:service interface="com.education.service.IStuCourseService"
+		ref="stuCourseServiceImpl"></dubbo:service>
+	<!-- 刘帅:所有小节PartSectionServiceImpl -->
+	<dubbo:service interface="com.education.service.IPartSectionService"
+		ref="partSectionServiceImpl"></dubbo:service>
+	<!-- 刘帅:该小节对应的课程信息CourseInfoServiceImpl -->
+	<dubbo:service interface="com.education.service.ICourseInfoService"
+		ref="courseInfoServiceImpl"></dubbo:service>
+	<!-- 刘帅:论文管理ThesisServiceImpl -->
+	<dubbo:service interface="com.education.service.IThesisService"
+		ref="thesisServiceImpl"></dubbo:service>
+	<!-- 刘帅:论文规范thesisLayServiceImpl -->
+	<dubbo:service interface="com.education.service.IThesisLayService"
+		ref="thesisLayServiceImpl"></dubbo:service>
+	<!-- 刘帅:播放视频playVideoServiceImpl -->
+	<dubbo:service interface="com.education.service.IPlayVideoService"
+		ref="playVideoServiceImpl"></dubbo:service>
+	<!-- 赵睿慷系统公告接口 -->
+	<dubbo:service interface="com.education.service.INoticeServiceApi"
+		ref="INoticeServiceApiImpl">
+	</dubbo:service>
+	<!-- 赵睿慷专业管理接口 -->
+	<dubbo:service interface="com.education.service.IMajorServiceApi"
+		ref="majorServiceApiImpl">
+	</dubbo:service>
+	<!-- 赵睿慷导学资源接口 -->
+	<dubbo:service interface="com.education.service.IStudyResourceApi"
+		ref="IStudyResourceApiImpl">
+	</dubbo:service>
+	<!--冯云威：teacherEvaluationServiceImpl 教师发布 -->
+	<dubbo:service ref="teacherEvaluationServiceImpl"
+		interface="com.education.service.TeacherEvaluationService" />
+	<!--赵超视频答疑模块 mvideoQuizServiceImpl -->
+	<dubbo:service interface="com.education.service.MvideoQuizService"
+		ref="mvideoQuizServiceImpl"></dubbo:service>
+	<!--赵超考试管理模块queryExamPageImpl -->
+	<dubbo:service interface="com.education.service.QueryExamPage"
+		ref="queryExamPageImpl"></dubbo:service>
+	<!-- 杨振欣：角色管理接口 -->
+	<dubbo:service interface="com.education.service.IRoleService"
+		ref="roleServiceImpl"></dubbo:service>
+	<!--杨振欣：学生登录接口发布 -->
+	<dubbo:service interface="com.education.service.IStudentLoginService"
+		ref="studentLoginServiceImpl"></dubbo:service>
+	<!-- 李志鹏：EnrollServiceImpl招生计划服务实现发布 -->
+	<dubbo:service interface="com.education.service.IEnrollServiceApi"
+		ref="enrollServiceImpl"></dubbo:service>
+	<!-- 李志鹏：ICourseSectionApi题库发布服务实现发布 -->
+	<dubbo:service interface="com.education.service.ICourseSectionApi"
+		ref="CourseSectionService"></dubbo:service>
+	<!-- 李志鹏：ICourseSectionApi题库发布服务实现发布 -->
+	<dubbo:service interface="com.education.service.SelectExamApi"
+		ref="SelectExamService"></dubbo:service>
+	<!-- 张露林：TeacherAnnouncementimpl报名审核管理服务实现发布 -->
+	<dubbo:service interface="com.education.service.IAdmissionsRevie"
+		ref="admissionsReviewimpl"></dubbo:service>
+	<!-- 张露林：admissionsReviewimpl报名审核管理服务实现发布 -->
+	<dubbo:service interface="com.education.service.ITeacherAnnouncement"
+		ref="teacherAnnouncementimpl"></dubbo:service>
+	<!-- 张恒：teacherServiceImpl教师服务实现发布 -->
+	<dubbo:service ref="teacherServiceImpl"
+		interface="com.education.service.ITeacherService" />
+	<!-- 张建磊：NoticeServiceImpl公告管理服务实现发布 -->
+	<dubbo:service interface="com.education.service.INoticeService"
+		ref="noticeServiceImpl"></dubbo:service>
+	<!-- 辛亚会 异动 管理 -->
+	<dubbo:service interface="com.education.service.IChangeService"
+		ref="changeServiceImpl"></dubbo:service>
+	<!-- 徐鹏超 教学计划 -->
+	<dubbo:service interface="com.education.service.EdService"
+		ref="edServiceImp"></dubbo:service>
+	<!-- 徐鹏超：educationServiceImp教学计划发布 -->
+	<dubbo:service interface="com.education.service.EducationService"
+		ref="educationServiceImp"></dubbo:service>
+	<!-- 周长磊：学生端毕业论文 -->
+	<dubbo:service interface="com.education.service.IStuthesisService"
+		ref="stuthesisServiceImpl"></dubbo:service>
+	<!-- 配置扫描包 -->
+	<context:component-scan base-package="com.education.*"></context:component-scan>
+	<import resource="classpath:dubbo/dubbo-spring.xml" />
+	<import resource="classpath:spring/spring-mybatis.xml" />
+</beans>

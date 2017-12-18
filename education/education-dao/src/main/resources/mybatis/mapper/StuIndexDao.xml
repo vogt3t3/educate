@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StuIndexDao">
+
+    <select id="queryCourse" parameterType="int" resultType="stuIndexDo">
+       
+       select c.course_id as courseId,course_name as courseName,teacher_realname as teacherName,score.score_credit as scoreCredit  from t_course c,t_teacher teacher,t_score score 
+       where c.teacher_id = teacher.teacher_id and c.score_id = score.score_id
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- 配置唯一标示 -->
+	<dubbo:application name="DubboClicent" />
+	<!-- 每个人使用时需要改为自己的 zookeeper的IP -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181"></dubbo:registry>
+	<!-- 注入登陆的接口，杨振欣shiro权限需要 -->
+	<dubbo:reference id="iTeacherLoginService"
+		interface="com.education.service.ITeacherLoginService"></dubbo:reference>
+	<!-- 所要使用的接口，下面为示例 -->
+	<dubbo:annotation />
+
+</beans>

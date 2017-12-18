@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.RoleDao">
+	<!-- 角色查询方法——查询所有角色 -->
+	<select id="listAllRole" resultType="roleModel" >
+		select role_id as roleId,role_name as roleName,role_desc as roleDesc from t_role where role_delete=1
+	</select>
+	<!-- 添加角色 -->
+	<insert id="addRole" parameterType="roleModel">
+		insert into t_role(role_id,role_name,role_desc,role_delete) values(null,#{roleName},#{roleDesc},1)
+	</insert>
+	<!-- 修改角色 -->
+	<update id="updateRole" parameterType="roleModel">
+		update t_role set role_name=#{roleName},role_desc=#{roleDesc} where role_id=#{roleId}
+	</update>
+	<!-- 根据编号删除角色 -->
+	<update id="deleteRole" parameterType="Integer">
+		update t_role set role_delete=0 where  role_id=#{roleId}
+	</update>
+</mapper>
+
+

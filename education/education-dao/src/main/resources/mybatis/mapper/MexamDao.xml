@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.MexamDao">
+	     <resultMap type="ExamMessageModel" id="ExamMap"> 
+	     <id column="exam_id" property="examid" /> 
+	     <result column="exam_place" property="examplace" /> 
+		 <result column="exam_time" property="examtime" />
+		 <result column="exam_appoint_time" property="examappointtime" />
+		 <result column="exam_form" property="examform" />
+         <result column="exam_addtime" property="examaddtime" />
+		 <result column="exam_motify_person" property="exammotifyperson" /> 
+		 <result column="exam_motify_date" property="exammotifydate" /> 
+		 <result column="exam_delete" property="examdelete" />
+		 <result column="teacher_id" property="teacherid" />
+		 <result column="course_name" property="coursename" />
+		 <result column="course_id" property="courseid" />
+		 <result column="teacher_realname" property="teachername" />
+		 </resultMap>
+	    <select id="queryExam" resultMap="ExamMap" >
+			select 
+			e.exam_id,
+			e.exam_place,
+			e.exam_time,
+			e.exam_appoint_time,
+			e.exam_form,
+			e.exam_addtime,
+			e.exam_motify_person,
+			e.exam_motify_date,
+			e.exam_delete,
+			t.teacher_id,
+			t.teacher_realname,
+			c.course_id,
+			c.course_name
+			from
+			t_exam e,
+			t_course c,
+			t_teacher t
+			where
+			e.course_id = c.course_id
+			and
+			e.teacher_id = t.teacher_id
+			and 
+		    e.exam_delete=1
+	</select>
+				<insert id="addResource" parameterType="examMessageModel">
+			 	  insert
+				  into 
+				  t_exam
+				  (course_id,
+				  teacher_id,
+				  exam_place,
+				  exam_time,
+				  exam_appoint_time,
+				  exam_form, exam_addtime,
+				  exam_motify_person,
+				  exam_motify_date,
+				  exam_delete) 
+				  values(#{teacherid},
+				  #{courseid},
+				  #{examplace}, 
+				  #{examtime},
+				  #{examappointtime},
+				  #{examform},
+				  #{examaddtime},
+				  #{exammotifyperson},
+				  #{exammotifydate},
+				  #{examdelete});
+				</insert>
+			  <update id="deletExam" parameterType="int">
+			  update t_exam set exam_delete=0 where exam_id=#{eid}
+			  </update>
+			
+</mapper>
+
+

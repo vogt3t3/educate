@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.CoursewareDao">
+    <!-- 查询指定资源id对应的所有记录 申忠正(如果资源id为空，则查询所有课件资源)-->
+    <select id="queryCourseware" parameterType="int" resultType="courseware">
+        select 
+        courseware_id as coursewareId,
+        courseware_name as coursewareName,
+        courseware_size as coursewareSize,
+        courseware_path as coursewarePath,
+        courseware_addtime as coursewareAddtime 
+        from t_courseware       
+        where courseware_delete = 1 
+        and resource_id = #{resourceId}
+    </select>
+    <!-- 删除一条记录  申忠正-->
+    <update id="deleteCourseware" parameterType="int">
+        update t_courseware set courseware_delete=0 where courseware_id=#{coursewareId}
+    </update>
+    <!-- 添加操作 申忠正 -->
+    <insert id="coursewareAdd" parameterType="coursewareResId">
+        insert into 
+          t_courseware(resource_id,courseware_name,
+                     courseware_size,courseware_path,
+                     courseware_addtime,courseware_delete) 
+          values(#{resourceId},#{coursewareName},#{coursewareSize},#{coursewarePath},#{coursewareAddtimeStr},1)
+    </insert>
+</mapper>

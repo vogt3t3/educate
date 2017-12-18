@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.SectionTestDao">
+	<!-- 根据学生的编号查询需要测试的课程 -->
+	<select id="getCourseByStuId" parameterType="int" resultType="testOfCourse">
+		select c.course_id as courseId,c.course_name as courseName,
+			count(s.section_id) as sectionNum 
+		from t_section s join t_course c on s.course_id=c.course_id
+			join student_course sc on sc.course_id=c.course_id
+		where sc.student_id=#{stuId} and c.course_delete=1
+			and s.section_delete=1
+		group by sc.course_id
+	</select>
+	<!-- 根据课程的编号查询需要测试的章节 -->
+	<select id="getSectionByCourseId" parameterType="int" resultType="testOfSection">
+		select s.section_id sectionId,s.section_name sectionName,ss.score_test score
+		from t_section s left join t_section_score ss on s.section_id=ss.section_id
+		where s.course_id=#{courseId} and s.section_delete=1
+		group by s.section_id
+	</select>
+	<!-- 根据章节的编号查询出章节的试题 -->
+	<select id="getSlectPaper" parameterType="int" resultType="selectModel">
+		select select_id selectId,select_name selectName,
+			select_a selectA,select_b selectB,
+			select_c selectC,select_d selectD,
+			select_answer selectAnswer,select_point selectPoint
+		from t_select
+		where section_test_id=#{sectionId} and select_delete=1
+	</select>
+	<!-- 根据章节编号和学号查询该学生该章节的测试分数 -->
+	<select id="getScore" resultType="Integer">
+		select score_test from t_section_score where section_id=#{sectionId} and student_id=#{stuId}
+	</select>
+	<!-- 保存章节测试的分数 -->
+	<insert id="saveSectionScore">
+		insert into t_section_score values(
+			null,#{sectionId},#{score},#{stuId}
+		)
+	</insert>
+	<!-- 修改章节测试的分数 -->
+	<update id="updateSectionScore">
+		update t_section_score set score_test=#{score}
+		where section_id=#{sectionId} and student_id=#{stuId}
+	</update>
+	<!-- 根据章节的编号查询出课程的编号 -->
+	<select id="getCourseId" parameterType="int" resultType="int">
+		select course_id from t_section where section_id=#{sectionId}
+	</select>
+	<!-- 根据章节的编号查询出该课程章节的数量 -->
+	<select id="getAllSection" parameterType="int" resultType="int">
+		select count(section_id) from t_section where course_id=#{courseId}
+	</select>
+	<!-- 根据学号和课程编号查询出章节的考试成绩的总和 -->
+	<select id="getSectionScoureSum" resultType="Integer">
+		select sum(score_test) 
+		from t_section_score ss join t_section s
+			on ss.section_id=s.section_id
+			join t_course c
+			on s.course_id=c.course_id
+		where c.course_id=#{courseId} and ss.student_id=#{stuId}
+	</select>
+	<!-- 根据学号和课程编号查询出成绩编号 -->
+	<select id="getScoureId" resultType="Integer">
+		select score_id from t_score where course_id=#{courseId} and student_id=#{stuId}
+	</select>
+	<!-- 向最终成绩中添加章节测试成绩 -->
+	<insert id="addSectionScoreToFanally">
+		insert into t_score(course_id,student_id,score_test) values(#{courseId},#{stuId},#{scour})
+	</insert>
+	<!-- 向最终成绩中更新章节测试成绩 -->
+	<update id="updateSectionScoreToFanally">
+		update t_score set score_test=#{scour}
+		where course_id=#{courseId} and student_id=#{stuId}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+

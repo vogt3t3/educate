@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StuthesisDao">
+
+    <!-- 获取论文规范 -->
+    <select id="listThesisLayout" resultType="thesisLayoutModel">
+        select  thesis_layout_id as layoutId,
+                thesis_layout_name as layoutName,
+                thesis_layout_content as layoutContent,
+                thesis_layout_update as layoutUpdate
+        from    t_thesis_layout
+        where   thesis_layout_delete = 1
+    </select>
+    
+    <!-- 获取论文 -->
+    <select id="listThesis" resultType="thesisModel">
+       select   thesis_id as thesisId,
+                thesis_title as thesisTitle,
+                thesis_address as thesisAddress,
+                thesis_score as thesisScore,
+                thesis_state as thesisState,
+                thesis_date as thesisDate
+       from     t_thesis
+       where    thesis_delete = 1
+       and      student_id = #{studentId}
+    </select>
+    
+    <!-- 提交论文 -->
+    <insert id="saveThesis">
+        insert  into t_thesis(
+                student_id,
+                thesis_title,
+                thesis_address,
+                thesis_date,
+                thesis_state,
+                thesis_delete)
+        values( #{th.studentId},
+                #{th.thesisTitle},
+                #{th.thesisAddress},
+                date_format(now(),'%y%m%d'), 0, 1
+        )
+    </insert>
+
+</mapper>

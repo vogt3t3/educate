@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.CourseInfoDao">
+
+    <select id="getCourseInfo" parameterType="int" resultType="courseDo">
+       
+        select course.course_id as courseId,course_name as courseName,course_edition as courseEdition,partSection.part_id as partId,part_name as partName,part_frequence as partFrequence,video.video_id as videoId,video_name as videoName 
+        from t_part_section as partSection,t_section as section,t_course as course,t_video as video where partSection.section_id = section.section_id and section.course_id = course.course_id 
+        and video.part_id = partSection.part_id and video.video_id = partSection.video_id
+        and partSection.part_id =#{partId}
+    </select>
+
+</mapper>

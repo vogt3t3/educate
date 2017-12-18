@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 查询所有权限 -->
+<mapper namespace="com.education.dao.PermissionDao">
+	<select id="listPermission" resultType="permissionModel">
+		select permission_id as
+		permissionId,permission_name as
+		permissionName,permission_type as
+		permissionType,
+		permission_url as permissionUrl,permission_code as
+		permissionCode from t_permission
+		where permission_delete=1
+	</select>
+	<!-- 添加全新的权限 -->
+	<insert id="addPermission" parameterType="permissionModel">
+		insert into
+		t_permission(permission_id,permission_name,permission_type
+		,permission_url,permission_code,permission_delete)
+		values(null,#{permissionName},#{permissionType},#{permissionUrl},#{permissionCode},1)
+	</insert>
+	<!-- 修改权限信息 -->
+	<update id="updatePermission" parameterType="permissionModel">
+		update t_permission
+		set
+		permission_name=#{permissionName},permission_type=#{permissionType},
+		permission_url=#{permissionUrl},permission_code=#{permissionCode}
+		where permission_id=#{permissionId}
+	</update>
+	<!-- 根据编号删除某一个权限 -->
+	<update id="deletePermission" parameterType="Integer">
+		update t_permission
+		set permission_delete=0 where permission_id = #{permissionId}
+	</update>
+	<!-- 查询某个角色已经获得的权限 -->
+	<select id="getPermissonByRoleId" resultType="permissionModel">
+		select
+		p.permission_id as permissionId,
+		p.permission_name as permissionName,
+		p.permission_type as permissionType,
+		p.permission_url as permissionUrl,
+		p.permission_code as permissionCode
+		from t_role_permission rp inner
+		join t_permission p on
+		rp.permission_id=p.permission_id
+		where
+		rp.delete_status=1 and rp.role_id=#{role_id} and p.permission_delete=1
+	</select>
+
+	<!-- 查询某个角色还没有获得的权限 -->
+	<select id="getPermissonByRoleIdNo" resultType="permissionModel">
+		select
+		p.permission_id as permissionId,
+		p.permission_name as permissionName,
+		p.permission_type as
+		permissionType,
+		p.permission_url as permissionUrl,
+		p.permission_code as
+		permissionCode
+		from t_permission p where
+		p.permission_id not in(
+		select rp.permission_id from t_role_permission
+		rp where rp.role_id=#{role_id} and rp.delete_status=1
+		) and p.permission_delete=1
+	</select>
+	<!-- 查看指定的角色有没有该权限，防止授权重复 -->
+	<select id="getPermissionHave" resultType="Integer">
+		select p.id from
+		t_role_permission p where p.permission_id=#{permissionId} and
+		p.role_id=#{roleId}
+	</select>
+	<!-- 给用户授权（当表中没有该权限时（不包含删除权限为空的情况） -->
+	<insert id="addRolePermission">
+		insert into
+		t_role_permission(id,role_id,permission_id,delete_status)
+		values(null,#{roleId},#{permissionId},1)
+	</insert>
+	<!-- 恢复用户权限 给用户授权（当表该角色的该权限删除状态为空时，修改删除状态即可）） -->
+	<update id="updateRolePermission">
+		update t_role_permission set delete_status=1 where
+		id=#{Id}
+	</update>
+	<!-- 删除某个用户的某个权限 -->
+	<update id="removeRolePermission">
+		update t_role_permission set delete_status=0 where
+		permission_id=#{permissionId} and
+		role_id=#{roleId}
+	</update>
+</mapper>

@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.ThesisLayDao">
+    
+    <!-- 查询专业编号-->
+    <select id="getThesisLayId" parameterType="String" resultType="int">
+       
+      select major_id from t_major where t_major.major_name = #{majorName}
+    </select>
+    
+    <!-- 查询所有论文规范 -->
+    <select id="getThesisLay" resultType="thesisLayDo">
+       
+       select major.major_id as majorId,major.major_name as majorName,thesisLay.thesis_layout_id as layoutId,thesisLay.thesis_layout_name as layoutName,thesisLay.thesis_layout_content as layoutContent from t_thesis_layout as thesisLay,t_major major where thesisLay.thesis_layout_id = major.thesis_layout_id 
+       and thesisLay.major_id = major.major_id
+    </select>
+    
+    <!-- 添加论文规范 -->
+    <insert id="addThesisLay" parameterType="thesisLayDo" useGeneratedKeys="true" keyProperty="layoutId">
+        insert into t_thesis_layout values(null,#{majorId},1,#{layoutName},#{layoutContent},now(),1)
+    </insert>
+    
+    <!-- 修改专业表中的论文规范编号 -->
+    <update id="updateMajor" parameterType="thesisLayDo">
+        update t_major as major set major.thesis_layout_id=#{layoutId} where major.major_id=#{majorId} 
+    </update>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StudentDao">
+	<!--查询学生缴费状态 -->
+	<select id="getMoney" resultType="studentModel">
+		select
+		student_id as studentId,
+		student_name as studentName,
+		student_idcard as studentIdcard,
+		student_first_money as firstMoney,
+		student_first_money_time as
+		firstMoneyTime,
+		student_second_money as secondMoney,
+		student_second_money_time as secondMoneyTime
+		from t_student
+		where
+		student_id=#{studentId}
+	</select>
+	<!-- 根据学生的身份证交纳学费 -->
+	<select id="payMoney" resultType="studentModel" >
+		select s.student_name as studentName,s.student_phone as studentPhone ,s.student_idcard as studentIdcard,
+		m.major_name as majorName,e.enroll_tuition as enrollTuition
+		from
+		t_student as s left join t_major as m on s.major_id=m.major_id
+		left join t_enroll_students as e on e.enroll_id=m.enroll_id where
+		s.student_idcard=#{studentIdcard}
+	</select>
+	<!--更新学生缴费信息  -->
+	<update id="updateMoney" parameterType="studentModel">
+	update t_student set student_second_money=#{enrollTuition} where  student_idcard=#{studentIdcard}
+	</update>
+	
+</mapper>
+	
+	

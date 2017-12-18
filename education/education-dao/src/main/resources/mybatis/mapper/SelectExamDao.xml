@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.education.dao.SelectExamDao">
+  
+  <resultMap type="Judge" id="getJudge">
+  <id property="value" column="course_id"/>
+  <result property="label" column="course_name"/>
+  <collection property="children" ofType="SectionOption">
+  <id property="value" column="section_id"/>
+  <result property="label" column="section_name"/>
+  </collection>
+  </resultMap>
+  <!-- 章节选择下拉框 -->
+  <select id="getCourseSection" resultMap="getJudge">
+  select c.course_name,s.section_name,c.course_id,s.section_id from 
+  t_course  c,t_section s where c.course_id=s.course_id
+  </select>
+   <!-- 课程下拉框 -->
+  <select id="getCourse" resultType="courseModel">
+  select course_name as courseName,course_id as courseId from t_course
+  </select>
+   <!-- 页面分页信息 -->
+  <select id="getSelectPage" resultType="selectExam" parameterType="String">
+  select
+  select_id as selectId, 
+  select_name as selectName,
+  select_addtime as selectAddtime,
+  score_type as scoreType,
+  select_a as selectA,
+  select_b as selectB,
+  select_c as selectC,
+  select_d as selectD,
+  select_answer as selectAnswer,
+  select_point as selectPoint
+  from t_select  where select_delete= 1
+
+ <if test="_parameter !=null  and _parameter != ''">
+    and select_name like CONCAT('%',#{searchMessage},'%')  
+</if>
+  
+  </select>
+ <!-- 添加章节测试题库 -->
+<insert id="addCourseSection" parameterType="selectExam">
+insert into t_select(select_id,select_name,select_a,select_b,select_c,select_d,select_answer,select_point,select_addtime,select_delete,
+score_type,course_id,section_test_id) 
+values(null,#{selectName},#{selectA},#{selectB},#{selectC},#{selectD},#{selectAnswer},#{selectPoint},#{selectAddtime},1,2,#{courseId},#{sectionId})
+  </insert>
+  
+  <!-- 添加期末测试题库 -->
+<insert id="addExam" parameterType="selectExam">
+insert into t_select(select_id,select_name,select_a,select_b,select_c,select_d,select_answer,select_point,select_addtime,select_delete,
+score_type,course_id) 
+values(null,#{selectName},#{selectA},#{selectB},#{selectC},#{selectD},#{selectAnswer},#{selectPoint},#{selectAddtime},1,1,#{courseId})
+  </insert>
+  
+ <!-- 添加入学测试题库 -->
+<insert id="addEnter" parameterType="selectExam">
+insert into t_select(select_id,select_name,select_a,select_b,select_c,select_d,select_answer,select_point,select_addtime,select_delete,
+score_type,enter_test_type) 
+values(null,#{selectName},#{selectA},#{selectB},#{selectC},#{selectD},#{selectAnswer},#{selectPoint},#{selectAddtime},1,3,#{enterType}) 
+  </insert>  
+  <!-- 修改数据信息 -->
+   <update id="updateSelect" parameterType="selectExam">
+  update t_select set select_name =#{selectName},select_a=#{selectA},select_b=#{selectB},select_c=#{selectC},select_d=#{selectD},select_answer=#{selectAnswer},select_point=#{selectPoint},
+  select_modify_date = #{modifyDate},select_modify_person=#{modifyPerson} where select_id = #{selectId}
+  </update>
+  <!-- 删除 -->
+  <update id="deleteSelect" parameterType="Integer">
+  update t_select set select_delete =0 where select_id = #{selectId}
+  
+  </update> 
+  
+  </mapper>

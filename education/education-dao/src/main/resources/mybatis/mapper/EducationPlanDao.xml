@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.EducationPlanDao">
+	<!-- 获取分页教师计划列表(学生端) -->
+	<select id="listEducation" resultType="education">
+		select 	e.education_plan_id as educationPlanId,
+		        e.education_grade as educationGrade,
+				e.course_name as courseName,
+				e.course_type as courseClass,
+				e.study_score as majorAcademic,
+				e.study_term as majorCredit,
+				m.major_name as majorName
+		from 	t_education e,t_major m
+		where   e.major_id=m.major_id	
+		and 	education_plan_delete=1
+	</select>
+	
+	<!-- 获取分页教师计划列表(教师端)(模糊查询) -->
+	<select id="queryEducationPlan" resultType="education">
+		select 	e.education_plan_id as educationPlanId,
+		        e.education_grade as educationGrade,
+				e.course_name as courseName,
+				e.course_type as courseClass,
+				e.study_score as majorAcademic,
+				e.study_term as majorCredit,
+				m.major_name as majorName
+		from 	t_education e,t_major m
+		<where>
+		<if test="true">
+                e.major_id=m.major_id	
+		and 	education_plan_delete=1
+            </if>
+            <if test="educationPlanId!=null" >
+                and e.education_plan_id = #{educationPlanId}
+            </if>
+            <if test="majorName!=null and majorName!=''">
+                and m.major_name like CONCAT('%',#{majorName},'%')
+            </if>
+		
+		</where>   
+		
+	</select>
+	
+	<!-- 增加教学计划(教师端) -->
+	<insert id="addEducationPlan" parameterType="education">
+		insert into t_education(major_id,education_grade,course_name,course_type,study_score,study_term,education_plan_delete)
+		values(#{majorId},#{educationGrade},#{courseName},#{courseClass},#{majorAcademic},#{majorCredit},1)
+	</insert>
+	<!-- 增加教学计划(教师端)查询 -->
+	<select id="addMajorPlan" resultType="MajorModel">
+	select 	   major_id as majorId,
+				major_name as majorName
+		from 	t_major  
+		
+	</select>
+	
+	<!-- 增加教学计划(教师端)查询 -->
+	<select id="queryPlan" resultType="Education">
+	select 	   education_plan_id as educationPlanId,
+				course_type as courseClass
+		from 	t_education  
+		
+	</select>
+	
+	<!-- 删除(隐藏)教学计划(教师端) -->
+	<update id="delEducationPlan">
+		update t_education
+		set education_plan_delete=0
+		where education_plan_delete=1
+		and  education_plan_id=#{educationPlanId}
+		
+	</update>
+
+	<!-- 根据id查询一条数据(教师端) -->
+	<select id="queryEducationId" resultType="education">
+		select 	e.education_plan_id as educationPlanId,
+		        e.major_id as majorId,
+		        e.education_grade as educationGrade,
+				e.course_name as courseName,
+				e.course_type as courseClass,
+				e.study_score as majorAcademic,
+				e.study_term as majorCredit,
+				m.major_name as majorName
+		from 	t_education e,t_major m
+		where   e.major_id=m.major_id	
+		and 	education_plan_delete=1
+		and 	e.education_plan_id=#{educationPlanId}
+	</select>
+
+	<!--根据id修改教学计划数据(教师端) -->
+	<update id="updataEducationPlan" parameterType="education">
+		update 	t_education
+		set 	education_plan_id=#{educationPlanId},
+		        major_id=#{majorId},
+		        education_grade=#{educationGrade},
+		        course_name=#{courseName},
+				course_type=#{courseClass},
+				study_score=#{majorAcademic},
+				study_term=#{majorCredit}
+				
+		where 	education_plan_id=#{educationPlanId}
+	</update>
+
+	
+</mapper>

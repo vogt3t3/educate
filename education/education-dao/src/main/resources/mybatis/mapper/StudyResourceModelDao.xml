@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.education.dao.StudyResourceModelDao">
+    <!-- 实体类中的和数据库中的数据不一致 -->
+    <resultMap type="com.education.model.StudyResourceModel" id="likeStudyMap">
+        <result property="resourceId" column="resource_id" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="teacherRealName" column="teacher_realname" />
+        <result property="courseId" column="course_id" />
+        <result property="courseName" column="course_name" />
+        <result property="resourceName" column="resource_name" />
+        <result property="resourceTitle" column="resource_title" />
+        <result property="resourceDescribe" column="resource_describe" />
+        <result property="resourceFrequence" column="resource_frequence" />
+        <result property="resourceDelete" column="resource_delete" />
+    </resultMap>
+    <select id="getStudy" resultMap="likeStudyMap">
+        select study.resource_id,study.teacher_id,teacher.teacher_realname,study.course_id,course.course_name,
+        study.resource_name,study.resource_title,study.resource_describe,study.resource_frequence,study.resource_delete
+        from t_teacher teacher ,t_study_resource study ,t_course course
+        <where>
+            <if test="true">
+                and resource_delete = 1 and study.teacher_id=teacher.teacher_id 
+                and course.course_id=study.course_id 
+            </if>
+            <if test="resourceId!=null">
+                and resource_id = #{resourceId}
+            </if>
+            <if test="courseName!=null and courseName!=''">
+                and course_name = like concat('%',#{courseName},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
